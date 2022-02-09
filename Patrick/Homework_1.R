@@ -84,9 +84,8 @@ trim1_test = testing(trim1_split)
 k_grid = seq(2,100,by = 2)
 
 trim1_rmse = foreach(k = k_grid, .combine='rbind') %do% {
-  model = knnreg(price ~ mileage, k=k, data = trim1_train, use.all=FALSE)
-  errs = modelr::rmse(model,trim1_test)
-  c(k=k, errs = mean(errs))
+  errs = rmse(knnreg(price ~ mileage, k=k, data = trim1_train),trim1_test)
+  c(k=k, errs = errs)
 } %>% as.data.frame
 
 
