@@ -1,0 +1,46 @@
+```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+library(tidyverse)
+library(mosaic)
+library(ggplot2)
+library(rsample)
+library(caret)
+library(modelr)
+library(parallel)
+library(foreach)
+
+sclass <- read.csv("~/School/University of Texas-Austin/Classes/Data Mining/Data/sclass.csv")
+
+sclass_clean = sclass %>%
+  select(trim, mileage, price)%>%
+  filter(trim=='65 AMG' | trim=='350')
+
+sclass_350 = sclass_clean%>%
+  filter(trim=='350')
+
+sclass350_split = initial_split(sclass_350, prop = 0.8)
+sclass350_train = training(sclass350_split)
+sclass350_test = testing(sclass350_split)
+
+lm1 = lm(price ~ mileage, data=sclass350_train)
+lm2 = lm(price ~ poly(mileage, 2), data=sclass350_train)
+
+linear_bench = rmse(lm1, sclass350_test)
+quad_bench = rmse(lm2, sclass350_test)
+
+knn_opts = foreach(i = 2:100, .combine='rbind') %do% {
+  err = rmse(knnreg(price ~ mileage, data=sclass350_train, k=i),sclass350_test)
+  }%>% as.data.frame()
+
+knn_opts = data.frame(knn_opts,2:100)
+
+knn_opts = knn_opts%>%
+  mutate(RMSE = V1, k = X2.100)%>%
+  select(RMSE,k)
+
+ggplot(knn_opts)+
+  geom_line(aes(y=RMSE,x=k))+
+  geom_hline(aes(yintercept=quad_bench))+
+  geom_hline(aes(yintercept=linear_bench))
+
+
+```
