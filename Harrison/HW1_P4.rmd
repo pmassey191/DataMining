@@ -1,3 +1,12 @@
+---
+title: "HW1_P4"
+author: "Harrison Snell"
+date: "2/9/2022"
+output: md_document
+---
+
+
+
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 library(tidyverse)
 library(mosaic)
