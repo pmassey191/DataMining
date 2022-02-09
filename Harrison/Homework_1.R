@@ -81,22 +81,27 @@ trim1_split = initial_split(trim1, prop=0.8)
 trim1_train = training(trim1_split)
 trim1_test = testing(trim1_split)
 
-k_grid = c(2, 4, 6, 8, 10, 15, 20, 25, 30, 35, 40, 45,
-           50, 60, 70, 80, 90, 100, 125, 150, 175, 200, 250, 300)
+k_grid = seq(2,100,by = 2)
 
 trim1_rmse = foreach(k = k_grid, .combine='rbind') %do% {
   model = knnreg(price ~ mileage, k=k, data = trim1_train, use.all=FALSE)
-  errs = rmse(model,trim1_test)
-  c(k=k, errs = errs)
+  errs = modelr::rmse(model,trim1_test)
+  c(k=k, errs = mean(errs))
 } %>% as.data.frame
 
-trim1_split = initial_split(trim1, prop=0.8) 
-trim1_train = training(trim1_split)
-trim1_test = testing(trim1_split)
+
+ggplot(data = trim1_rmse, aes(x = k_grid, y = errs))+
+  geom_point()+
+  geom_line()
+
+
+trim2_split = initial_split(trim2, prop=0.8) 
+trim2_train = training(trim2_split)
+trim2_test = testing(trim2_split)
 
 trim2_rmse = foreach(k = k_grid, .combine='rbind') %do% {
   model = knnreg(price ~ mileage, k=k, data = trim2_train, use.all=FALSE)
-  errs = rmse(model,trim1_test)
+  errs = rmse(model,trim2_test)
   c(k=k, err = mean(errs))
 } %>% as.data.frame
 
@@ -115,7 +120,7 @@ trim2_rmse = foreach(k = k_grid, .combine='rbind') %do% {
 
 
 
-
+min(trim1_rmse$errs)
 
 
 
