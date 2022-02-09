@@ -125,11 +125,6 @@ View(sclass)
 sclass_clean = sclass %>%
   select(trim, mileage, price)%>%
   filter(trim=='65 AMG' | trim=='350')
-View(sclass_clean)
-
-ggplot(sclass_clean)+
-  geom_point(aes(x=mileage,y=price))+
-  facet_wrap(~trim)
 
 sclass_350 = sclass_clean%>%
   filter(trim=='350')
@@ -144,24 +139,31 @@ lm2 = lm(price ~ poly(mileage, 2), data=sclass350_train)
 linear_bench = rmse(lm1, sclass350_test)
 quad_bench = rmse(lm2, sclass350_test)
 
+knn_opts = foreach(i = 2:100, .combine='rbind') %do% {
+  err = rmse(knnreg(price ~ mileage, data=sclass350_train, k=i),sclass350_test)
+  }%>% as.data.frame()
 
-knn_opts = foreach(i = 2:nrow(sclass350_train)) %do% {
-  rmse(knnreg(price ~ mileage, data=sclass350_train, k=i),sclass350_test)
-  }
+knn_opts = data.frame(knn_opts,2:100)
 
-data_k = as.data.frame(knn_opts)
+knn_opts = knn_opts%>%
+  mutate(RMSE = V1, k = X2.100)%>%
+  select(RMSE,k)
 
-data_k = t(data_k)
-
-min(data_k)
-
-ggplot(data_k)+
-  geom_line(aes(x=k))
-
-
-
+ggplot(knn_opts)+
+  geom_line(aes(y=RMSE,x=k))+
+  geom_hline(aes(yintercept=quad_bench))+
+  geom_hline(aes(yintercept=linear_bench))
 
 
+
+knn350_20 <- knnreg(price ~ mileage, data=sclass350_train, k=50)
+
+sclass_350_test = sclass350_test %>%
+  mutate(price_pred = predict(knn350_20, sclass350_test))
+
+ggplot(data = sclass_350_test) + 
+  geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
+  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
 
 
 
@@ -172,11 +174,25 @@ sclassAMG_split = initial_split(sclass_AMG, prop = 0.8)
 sclassAMG_train = training(sclassAMG_split)
 sclassAMG_test = testing(sclassAMG_split)
 
-lm1_AMG = lm(price ~ mileage, data=sclassAMG_train)
-lm2_AMG = lm(price ~ poly(mileage, 2), data=sclassAMG_train)
+lm1 = lm(price ~ mileage, data=sclassAMG_train)
+lm2 = lm(price ~ poly(mileage, 2), data=sclassAMG_train)
 
-knn_opts_AMG = foreach(i = 2:nrow(sclassAMG_train)) %do% {
-  mk = knnreg(price ~ mileage, data=sclassAMG_train, k=i)
-  rmse(mk, sclassAMG_test)
-}
+linear_benchAMG = rmse(lm1, sclassAMG_test)
+quad_benchAMG = rmse(lm2, sclassAMG_test)
+
+
+knn_AMG = foreach(i = 2:100, .combine='rbind') %do% {
+  err = rmse(knnreg(price ~ mileage, data=sclassAMG_train, k=i),sclassAMG_test)
+}%>% as.data.frame()
+
+knn_AMG = data.frame(knn_AMG,2:100)
+
+knn_AMG = knn_AMG%>%
+  mutate(RMSE = V1, k = X2.100)%>%
+  select(RMSE,k)
+
+ggplot(knn_AMG)+
+  geom_line(aes(y=RMSE,x=k))+
+  geom_hline(aes(yintercept=quad_benchAMG))+
+  geom_hline(aes(yintercept=linear_benchAMG))
 
