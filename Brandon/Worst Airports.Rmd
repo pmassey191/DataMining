@@ -39,9 +39,9 @@ ggplot(ABIA_stats) +
   scale_fill_continuous_sequential(palette = "Heat"
                                     )  +
   theme_classic() +
-  labs(title = "Worst Arrival Delays by Airport",
+  labs(title = "Arrival Delays by Destination Airport",
        subtitle = "Arriving from Austin (At Least 500 Flights)",
-       x = "Average Flight Delay",
+       x = "Average Flight Delay (Mins)",
        y = "Destination") +
   geom_vline(aes(xintercept=5.5546)) +
   geom_text(mapping=aes(x=5.5546, y=5, label="Group Average"), size=4, angle=90, vjust=-.3, hjust=.3)
@@ -100,10 +100,10 @@ plot_usmap() +
                             label.r = unit(0.5, "lines"), label.size = 0.5,
                             segment.color = "red", segment.size = 1,
                             seed = 1002) +
-  labs(title = "Worst Arrival Delays by Airport",
+  labs(title = "Arrival Delays by Destination Airport",
        subtitle = "Arriving from Austin (At Least 500 Flights)"
   ) + 
   theme(legend.position = "right") +
-  guides(size=guide_legend(title="Arrival Delay"), color=guide_legend(title="Arrival Delay"))
+  guides(size=guide_legend(title="Average Delay (Mins)"), color=guide_legend(title="Average Delay (Mins)"))
 
 ```
