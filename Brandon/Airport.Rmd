@@ -4,7 +4,7 @@ output: md_document
 ---
 Here's my graph. 
 
-```{r }
+```{r echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 
 library(tidyverse)
@@ -30,7 +30,7 @@ ABIA_stats = ABIA %>%
             mean_arr_delay = mean(ArrDelay, na.rm=TRUE)) %>% 
   filter(count > 499)
 
-worstdelays <- ggplot(ABIA_stats) +
+ggplot(ABIA_stats) +
   geom_col(aes(x = mean_arr_delay, fct_reorder(Dest, mean_arr_delay), fill = mean_arr_delay), show.legend = FALSE) +
   scale_fill_continuous_sequential(palette = "Heat"
                                     )  +
@@ -48,8 +48,8 @@ worstdelays <- ggplot(ABIA_stats) +
 
 You can also embed plots, for example:
 
-```{r setup, include=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
 
 ## Let's also have only Austin outgoing flights
 airports <- airports %>% 
@@ -108,9 +108,3 @@ plot_usmap() +
 ## Including Plots
 
 You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
