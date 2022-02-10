@@ -117,8 +117,10 @@ olympics_C = olympics %>%
 ggplot(olympics_C)+
   geom_line(aes(x=year,y=avgage,color=sex))
 
+################################################
+################## Problem 4 ###################
+################################################
 
-# Problem 4
 sclass <- read.csv("~/School/University of Texas-Austin/Classes/Data Mining/Data/sclass.csv")
 View(sclass)
 
@@ -225,4 +227,117 @@ ggplot(data = sclass_AMG_test) +
   ggtitle(paste("AMG Trim: Line of Fit for K=",optk_AMG, sep = ""))+
   geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
   geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
+
+######################################################
+
+sclass_350 = sclass_clean%>%
+  filter(trim=='350')
+
+K_folds = 5
+k_grid = c(2:30,35,40,45,50,55,60,65,70,80, 90,100)
+
+sclass350_folds = crossv_kfold(sclass_350, k=K_folds)
+
+
+
+cv_grid_350 = foreach(k = k_grid, .combine='rbind') %dopar% {
+  models = map(sclass350_folds$train, ~ knnreg(price ~ mileage, k=k, data = ., use.all=FALSE))
+  errs = map2_dbl(models, sclass350_folds$test, modelr::rmse)
+  c(k=k, err = mean(errs), std_err = sd(errs)/sqrt(K_folds))
+} %>% as.data.frame
+
+ggplot(cv_grid_350) + 
+  geom_point(aes(x=k, y=err))+
+  scale_x_log10()+
+  geom_errorbar(aes(x=k, ymin = err-std_err, ymax = err+std_err)) +
+  labs(title = "350 Trim: RMSE for Different K Values\n", x = "K", y = "RMSE") +
+  theme_classic()
+
+opt_350 = cv_grid_350%>%
+  arrange(err)
+
+max_err_350 = opt_350[1,2] + opt_350[1,3]
+min_k_350 = opt_350[1,1]
+
+opt_350 = opt_350%>%
+  filter(k >= min_k_350)%>%
+  mutate(diff = max_err_350 - err)%>%
+  filter(diff > 0)%>%
+  arrange(diff)
+
+optk_350 = opt_350[1,1]
+
+sclass350_split = initial_split(sclass_350, prop = 0.8)
+sclass350_train = training(sclass350_split)
+sclass350_test = testing(sclass350_split)
+
+knn350_optk <- knnreg(price ~ mileage, data=sclass350_train, k=optk_350)
+
+sclass_350_test = sclass350_test %>%
+  mutate(price_pred = predict(knn350_optk, sclass350_test))
+
+ggplot(data = sclass_350_test) +
+  theme_classic()+
+  ggtitle(paste("350 Trim: Line of Fit for K=",optk_350, sep = ""))+
+  geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
+  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
+
+
+
+
+
+
+
+
+
+
+
+
+sclass_AMG = sclass_clean%>%
+  filter(trim=='65 AMG')
+
+sclassAMG_folds = crossv_kfold(sclass_AMG, k=K_folds)
+
+cv_grid_AMG = foreach(k = k_grid, .combine='rbind') %dopar% {
+  models = map(sclassAMG_folds$train, ~ knnreg(price ~ mileage, k=k, data = ., use.all=FALSE))
+  errs = map2_dbl(models, sclassAMG_folds$test, modelr::rmse)
+  c(k=k, err = mean(errs), std_err = sd(errs)/sqrt(K_folds))
+} %>% as.data.frame
+
+ggplot(cv_grid_AMG) + 
+  geom_point(aes(x=k, y=err))+
+  scale_x_log10()+
+  geom_errorbar(aes(x=k, ymin = err-std_err, ymax = err+std_err)) +
+  labs(title = "AMG Trim: RMSE for Different K Values\n", x = "K", y = "RMSE") +
+  theme_classic()
+
+opt_AMG = cv_grid_AMG%>%
+  arrange(err)
+
+max_err_AMG = opt_AMG[1,2] + opt_AMG[1,3]
+min_k_AMG = opt_AMG[1,1]
+
+opt_AMG = opt_AMG%>%
+  filter(k >= min_k_AMG)%>%
+  mutate(diff = max_err_AMG - err)%>%
+  filter(diff > 0)%>%
+  arrange(diff)
+
+optk_AMG = opt_AMG[1,1]
+
+sclassAMG_split = initial_split(sclass_AMG, prop = 0.8)
+sclassAMG_train = training(sclassAMG_split)
+sclassAMG_test = testing(sclassAMG_split)
+
+knnAMG_optk <- knnreg(price ~ mileage, data=sclassAMG_train, k=optk_AMG)
+
+sclass_AMG_test = sclassAMG_test %>%
+  mutate(price_pred = predict(knnAMG_optk, sclassAMG_test))
+
+ggplot(data = sclass_AMG_test) +
+  theme_classic()+
+  ggtitle(paste("AMG Trim: Line of Fit for K=",optk_AMG, sep = ""))+
+  geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
+  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
+
 
