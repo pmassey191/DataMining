@@ -18,6 +18,11 @@ library(viridis)
 library(here)
 library(colorspace)
 library(lemon)
+library(rsample)
+library(caret)
+library(modelr)
+library(parallel)
+library(foreach)
 ```
 
 
