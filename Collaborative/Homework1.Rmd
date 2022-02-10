@@ -4,18 +4,8 @@ author: "Patrick Massey, Harrison Snell, Brandon Williams"
 date: "2/10/2022"
 output: md_document
 ---
-
-
-## Problem 1
-
-### Am I actually always late for my connecting flight?
-
-I have taken several flights out of Austin-Bergstrom International Airport. Because there are no direct flights from Austin to Madison, WI, I have to use connecting flights. This prompts the question: why does it always feel like I'm late arriving to my connecting flight?
-
-First, let's look at the average arrival delay by airport. This dataset includes any destination airport with more than 500 flights from ABIA in 2008 (n=26). 
-
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 library(tidyverse)
 library(mosaic)
 library(airportr)
@@ -28,6 +18,19 @@ library(viridis)
 library(here)
 library(colorspace)
 library(lemon)
+```
+
+
+## Problem 1
+
+### Am I actually always late for my connecting flight?
+
+I have taken several flights out of Austin-Bergstrom International Airport. Because there are no direct flights from Austin to Madison, WI, I have to use connecting flights. This prompts the question: why does it always feel like I'm late arriving to my connecting flight?
+
+First, let's look at the average arrival delay by airport. This dataset includes any destination airport with more than 500 flights from ABIA in 2008 (n=26). 
+
+```{r warning=FALSE, message=FALSE}
+
 billboard = read.csv('../data/billboard.csv')
 olympics_top20 = read.csv('../data/olympics_top20.csv')
 ABIA <- read.csv(here("Data/ABIA.csv"))
