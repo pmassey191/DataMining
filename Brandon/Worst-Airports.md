@@ -26,11 +26,4 @@ other travellers, the major hubs in Atlanta (ATL) and Chicago (ORD) are
 in for some of the worst delays in the country for any flight out of
 Austin.
 
-## Worst Connecting Airports
-
-You can also embed plots, for example:
-
 ![](Worst-Airports_files/figure-markdown_strict/unnamed-chunk-2-1.png)
-
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.

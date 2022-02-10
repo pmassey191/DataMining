@@ -52,10 +52,6 @@ Congratulations to Salt Lake City for being early on average! Most airports, how
 
 What does this mean for my connecting flights? According to Business Wire, the major transfer hubs in the US are Dallas/Fort Worth (a major hub for American Airlines), Charlotte (also American), Atlanta (Delta), Chicago-O'Hare (United), and Denver (Frontier). It turns out, if you have to take a connecting flight, Charlotte (CLT) is your best bet, while Denver (DEN) and Dallas (DAL) perform about average for this group, at 5 minutes average arrival delay. Unfortunately for me and many other travellers, the major hubs in Atlanta (ATL) and Chicago (ORD) are in for some of the worst delays in the country for any flight out of Austin. 
 
-## Worst Connecting Airports
-
-You can also embed plots, for example:
-
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 
 ## Let's also have only Austin outgoing flights
@@ -111,5 +107,3 @@ plot_usmap() +
   guides(size=guide_legend(title="Arrival Delay"), color=guide_legend(title="Arrival Delay"))
 
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
