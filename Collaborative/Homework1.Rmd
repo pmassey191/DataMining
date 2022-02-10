@@ -304,7 +304,8 @@ ggplot(data = sclass_350_test) +
   theme_classic()+
   ggtitle(paste("350 Trim: Line of Fit for K=",optk_350, sep = ""))+
   geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
-  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
+  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)+
+  scale_x_continuous(labels = comma)
 
 
 ```
@@ -365,7 +366,8 @@ ggplot(data = sclass_AMG_test) +
   theme_classic()+
   ggtitle(paste("AMG Trim: Line of Fit for K=",optk_AMG, sep = ""))+
   geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
-  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
+  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)+
+  scale_x_continous(labels = comma)
 
 
 ```
