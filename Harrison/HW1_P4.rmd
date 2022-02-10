@@ -7,7 +7,7 @@ output: md_document
 
 ## Problem 4
 
-In this problem, we want to find the optimal value of K in our KNN regressions for each trim. In the chart of RMSE versus K for each trim there is an average RMSE mapped with one standard error bar. In each case, we use the "1SE" rule to determine our optimal K. That is we chose the largest K value that was within one standard error of the lowest average RMSE observed. Doing this with the 350 trims yields the following results.
+In this problem, we want to find the optimal value of K in our KNN regressions for each trim. We take the cross validation approach using 5 folds. In the chart of RMSE versus K for each trim there is an average RMSE mapped with one standard error bar. In each case, we use the "1SE" rule to determine our optimal K. That is we chose the largest K value that was within one standard error of the lowest average RMSE observed. Doing this with the 350 trims yields the following results.
 
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 library(tidyverse)
@@ -37,8 +37,6 @@ sclass_350 = sclass_clean%>%
   filter(trim=='350')
 
 sclass350_folds = crossv_kfold(sclass_350, k=K_folds)
-
-
 
 cv_grid_350 = foreach(k = k_grid, .combine='rbind') %dopar% {
   models = map(sclass350_folds$train, ~ knnreg(price ~ mileage, k=k, data = ., use.all=FALSE))
@@ -87,7 +85,7 @@ ggplot(data = sclass_350_test) +
 
 
 
-From the 350 Trim chart of RMSE versus K, we see that the RMSE bottoms out at `r optk_350`, as such the line of fit against the test data is for that K value. Similarly, we can find an optimal K value for the AMG trim cars.
+From the 350 Trim chart of RMSE versus K, we see that the optimal K is `r optk_350`, as such the line of fit against the test data is for that K value. Similarly, we can find an optimal K value for the AMG trim cars.
 
 
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}

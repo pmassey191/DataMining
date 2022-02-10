@@ -2,22 +2,22 @@ Problem 4
 ---------
 
 In this problem, we want to find the optimal value of K in our KNN
-regressions for each trim. In the chart of RMSE versus K for each trim
-there is an average RMSE mapped with one standard error bar. In each
-case, we use the “1SE” rule to determine our optimal K. That is we chose
-the largest K value that was within one standard error of the lowest
-average RMSE observed. Doing this with the 350 trims yields the
-following results.
+regressions for each trim. We take the cross validation approach using 5
+folds. In the chart of RMSE versus K for each trim there is an average
+RMSE mapped with one standard error bar. In each case, we use the “1SE”
+rule to determine our optimal K. That is we chose the largest K value
+that was within one standard error of the lowest average RMSE observed.
+Doing this with the 350 trims yields the following results.
 
 ![](HW1_P4_files/figure-markdown_strict/unnamed-chunk-2-1.png)![](HW1_P4_files/figure-markdown_strict/unnamed-chunk-2-2.png)
 
-From the 350 Trim chart of RMSE versus K, we see that the RMSE bottoms
-out at 70, as such the line of fit against the test data is for that K
-value. Similarly, we can find an optimal K value for the AMG trim cars.
+From the 350 Trim chart of RMSE versus K, we see that the optimal K is
+60, as such the line of fit against the test data is for that K value.
+Similarly, we can find an optimal K value for the AMG trim cars.
 
 ![](HW1_P4_files/figure-markdown_strict/unnamed-chunk-3-1.png)![](HW1_P4_files/figure-markdown_strict/unnamed-chunk-3-2.png)
 
-We see that the 1SE approach yields an optimal k=40. We observe higher
+We see that the 1SE approach yields an optimal k=35. We observe higher
 optimal K values for the 350 trim as compared to the AMG. This is due to
 the fact that the number of observations for the AMG trim is much lower
 than that of the 350. Thus to earn a lower RMSE, we need a more flexible
