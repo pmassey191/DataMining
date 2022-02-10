@@ -118,7 +118,7 @@ plot_usmap() +
 
 ## Problem 2
 
-(a)
+Part a:
 
 ```{r render=lemon_print}
 top10 <- billboard %>% 
@@ -131,7 +131,7 @@ top10 <- billboard %>%
 top10
 ```
 
-(b)
+Part b:
 
 ```{r}
 unique_songs <- billboard %>% 
@@ -151,7 +151,7 @@ ggplot(unique_songs)+
   theme(plot.title.position = 'plot')
 ```
 
-(c)
+Part c:
 
 ```{r}
 ten_week_hit <- billboard %>% 
@@ -177,7 +177,7 @@ ggplot(ten_week_hit, aes(fct_rev(fct_reorder(performer,count)),count))+
 
 ## Problem 3
 
-(a)
+Part a:
 
 ```{r}
 top_height <-olympics_top20 %>% 
@@ -190,7 +190,7 @@ x <- top_height[1,2]
 ```
 The 95th percentile of height for female competitors in the Athletics events is: `r x`
 
-b
+Part b:
 
 ```{r}
 height_variation <- olympics_top20 %>% 
@@ -205,7 +205,7 @@ height_variation <- olympics_top20 %>%
 
 The event with the highest standard deviation is: `r height_variation[1,1]` which had a standard deviation of `r round(height_variation[1,2],2)`.
 
-c
+Part c:
 
 ```{r caption = "We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time."}
 swimmers <- olympics_top20 %>% 

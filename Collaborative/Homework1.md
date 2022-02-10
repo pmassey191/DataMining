@@ -30,7 +30,7 @@ Austin.
 
 ## Problem 2
 
-1.  
+Part a:
 
 <table>
 <thead>
@@ -94,27 +94,27 @@ Austin.
 </tbody>
 </table>
 
-1.  
+Part b:
 
 ![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
-1.  
+Part c:
 
 ![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 ## Problem 3
 
-1.  
+Part a:
 
 The 95th percentile of height for female competitors in the Athletics
 events is: 183
 
-b
+Part b:
 
 The event with the highest standard deviation is: Rowing Women’s Coxed
 Fours which had a standard deviation of 10.87.
 
-c
+Part c:
 
 ![](Homework1_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
