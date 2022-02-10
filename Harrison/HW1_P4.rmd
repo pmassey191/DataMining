@@ -130,7 +130,8 @@ ggplot(data = sclass_AMG_test) +
   geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
   geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
 
-
 ```
-From the 350 Trim chart of RMSE versus K, we see that the RMSE bottoms out at ```{r optk_350}```, as such the line of fit against the test data is for that K value. Similarly we have a minimal RMSE and line of fit for k=```{r optk_AMG}```.
+
+
+From the 350 Trim chart of RMSE versus K, we see that the RMSE bottoms out at `r optk_350`, as such the line of fit against the test data is for that K value. Similarly we have a minimal RMSE and line of fit for k=`r optk_AMG`.
 

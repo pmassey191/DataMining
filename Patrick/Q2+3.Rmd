@@ -1,0 +1,35 @@
+---
+title: "q2+3"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(mosaic)
+library(airportr)
+library(dplyr)
+library(usmap)
+library(maptools)
+library(ggplot2)
+library(rgdal)
+library(viridis)
+library(here)
+library(colorspace)
+library(lemon)
+billboard = read.csv('../data/billboard.csv')
+knit_print.data.frame <- lemon_print
+```
+
+
+```{r caption="Data frame is now printed using `kable`.",render=lemon_print}
+top10 <- billboard %>% 
+  group_by(performer, song) %>% 
+  summarise(
+    count = n()
+  ) %>% 
+  arrange(desc(count)) %>% 
+  head(10)
+top10
+```
+

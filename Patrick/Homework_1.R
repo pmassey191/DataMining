@@ -24,7 +24,12 @@ unique_songs <- billboard %>%
     count = n()
   )
 ggplot(unique_songs)+
-  geom_line(aes(x = year, y = count))
+  geom_line(aes(x = year, y = count),color = "blue")+
+  theme_classic()+
+  labs(title = "Unique Songs by Year")+
+  xlab("Year")+
+  ylab("Cound of Unique Songs")+
+  theme(plot.title.position = 'plot')
 
 ten_week_hit <- billboard %>% 
   group_by(performer, song) %>% 
@@ -39,7 +44,13 @@ ten_week_hit <- billboard %>%
 
 ggplot(ten_week_hit, aes(fct_rev(fct_reorder(performer,count)),count))+
   geom_bar(stat = "identity")+
-  coord_flip()
+  coord_flip()+
+  theme_classic()+
+  labs(title = "Billboard Top Performers", subtitle = "Number of songs on billboard for at least 10 weeks")+
+  ylab("Count of Songs")+
+  xlab("Artist")+
+  theme(plot.title.position = 'plot')
+
 
 #Number 3
 olympics_top20 = read.csv('../data/olympics_top20.csv')
@@ -66,7 +77,11 @@ swimmers <- olympics_top20 %>%
 ggplot(data = swimmers, aes(x = year, y = avg_age,color = sex))+
   geom_point()+
   geom_line()+
-  theme_fivethirtyeight()
+  theme_classic()+
+  xlab("Year")+
+  ylab("Average Age")+
+  labs(title = "Average Age of Olympic Swimmers")+
+  theme(plot.title.position = 'plot')
 #Number 4
 
 sclass = read.csv('../data/sclass.csv')
@@ -83,13 +98,13 @@ trim1_test = testing(trim1_split)
 
 k_grid = seq(2,100,by = 2)
 
-trim1_rmse = foreach(k = k_grid, .combine='rbind') %do% {
-  errs = rmse(knnreg(price ~ mileage, k=k, data = trim1_train),trim1_test)
-  c(k=k, errs = errs)
-} %>% as.data.frame
+trim1_knn = foreach(k = k_grid, .combine='rbind') %do% { 
+  rmse(knnreg(price ~ mileage, data=trim1_train, k=k), trim1_test)
+}
+trim1_rmse = data.frame(trim1_knn,k_grid)
 
 
-ggplot(data = trim1_rmse, aes(x = k_grid, y = errs))+
+ggplot(data = trim1_rmse, aes(x = k_grid, y = trim1_knn))+
   geom_point()+
   geom_line()
 
@@ -103,21 +118,6 @@ trim2_rmse = foreach(k = k_grid, .combine='rbind') %do% {
   errs = rmse(model,trim2_test)
   c(k=k, err = mean(errs))
 } %>% as.data.frame
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 min(trim1_rmse$errs)
 
