@@ -22,7 +22,11 @@ olympics_top20 = read.csv('../data/olympics_top20.csv')
 knit_print.data.frame <- lemon_print
 ```
 ##Problem 2
+
+
 #a
+
+
 ```{r caption = "Top 10 Billbord Performers", render=lemon_print}
 top10 <- billboard %>% 
   group_by(performer, song) %>% 
