@@ -30,7 +30,7 @@ Austin.
 
 ## Problem 2
 
-(a)
+1.  
 
 <table>
 <thead>
@@ -94,20 +94,36 @@ Austin.
 </tbody>
 </table>
 
-(b) ![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-1.png)
-(c) ![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-1.png)
-\#\#Problem 3 \#a
+1.  
+
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+
+1.  
+
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+
+## Problem 3
+
+1.  
 
 The 95th percentile of height for female competitors in the Athletics
-events is: 183 \#b
+events is: 183
+
+b
 
 The event with the highest standard deviation is: Rowing Women’s Coxed
-Fours which had a standard deviation of 10.87. \#c
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-8-1.png) Prior
-to the 1952 Olympic Games, there appears to be a small number of
+Fours which had a standard deviation of 10.87.
+
+c
+
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+
+Prior to the 1952 Olympic Games, there appears to be a small number of
 participants for each year which is causing the large swings early on.
 After 1952 the amount of participating athletes becomes larger and
-stabilizes the mean of the age of the participants. \#\# Problem 4
+stabilizes the mean of the age of the participants.
+
+## Problem 4
 
 In this problem, we want to find the optimal value of K in our KNN
 regressions for each trim. We take the cross validation approach using 5
