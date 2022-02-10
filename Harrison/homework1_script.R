@@ -340,4 +340,3 @@ ggplot(data = sclass_AMG_test) +
   geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
   geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
 
-

@@ -12,12 +12,14 @@ Doing this with the 350 trims yields the following results.
 ![](HW1_P4_files/figure-markdown_strict/unnamed-chunk-2-1.png)![](HW1_P4_files/figure-markdown_strict/unnamed-chunk-2-2.png)
 
 From the 350 Trim chart of RMSE versus K, we see that the optimal K is
-60, as such the line of fit against the test data is for that K value.
+35, as such we fit the KNN model with k=35 to the test data as shown
+above.
+
 Similarly, we can find an optimal K value for the AMG trim cars.
 
 ![](HW1_P4_files/figure-markdown_strict/unnamed-chunk-3-1.png)![](HW1_P4_files/figure-markdown_strict/unnamed-chunk-3-2.png)
 
-We see that the 1SE approach yields an optimal k=35. We observe higher
+We see that the 1SE approach yields an optimal k=45. We observe higher
 optimal K values for the 350 trim as compared to the AMG. This is due to
 the fact that the number of observations for the AMG trim is much lower
 than that of the 350. Thus to earn a lower RMSE, we need a more flexible
