@@ -26,8 +26,11 @@ other travellers, the major hubs in Atlanta (ATL) and Chicago (ORD) are
 in for some of the worst delays in the country for any flight out of
 Austin.
 
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-1.png) \#\#
-Problem 2 (a)
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+
+## Problem 2
+
+(a)
 
 <table>
 <thead>
