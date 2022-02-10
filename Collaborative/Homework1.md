@@ -26,9 +26,130 @@ other travellers, the major hubs in Atlanta (ATL) and Chicago (ORD) are
 in for some of the worst delays in the country for any flight out of
 Austin.
 
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-1.png) \#\#
+Problem 2 (a)
 
-## Problem 4
+    top10 <- billboard %>% 
+      group_by(performer, song) %>% 
+      summarise(
+        count = n()
+      ) %>% 
+      arrange(desc(count)) %>% 
+      head(10)
+
+    ## `summarise()` has grouped output by 'performer'. You can override using the `.groups` argument.
+
+    top10
+
+<table>
+<caption>Top 10 Billbord Performers</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">performer</th>
+<th style="text-align: left;">song</th>
+<th style="text-align: right;">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Imagine Dragons</td>
+<td style="text-align: left;">Radioactive</td>
+<td style="text-align: right;">87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AWOLNATION</td>
+<td style="text-align: left;">Sail</td>
+<td style="text-align: right;">79</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jason Mraz</td>
+<td style="text-align: left;">I’m Yours</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Weeknd</td>
+<td style="text-align: left;">Blinding Lights</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LeAnn Rimes</td>
+<td style="text-align: left;">How Do I Live</td>
+<td style="text-align: right;">69</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LMFAO Featuring Lauren Bennett &amp; GoonRock</td>
+<td style="text-align: left;">Party Rock Anthem</td>
+<td style="text-align: right;">68</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OneRepublic</td>
+<td style="text-align: left;">Counting Stars</td>
+<td style="text-align: right;">68</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adele</td>
+<td style="text-align: left;">Rolling In The Deep</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jewel</td>
+<td style="text-align: left;">Foolish Games/You Were Meant For Me</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Carrie Underwood</td>
+<td style="text-align: left;">Before He Cheats</td>
+<td style="text-align: right;">64</td>
+</tr>
+</tbody>
+</table>
+
+Top 10 Billbord Performers
+
+(b)
+
+    unique_songs <- billboard %>% 
+      filter(year != 1958) %>% 
+      filter(year != 2021) %>% 
+      group_by(year) %>% 
+      distinct(song_id) %>% 
+      summarise(
+        count = n()
+      )
+    ggplot(unique_songs)+
+      geom_line(aes(x = year, y = count),color = "blue")+
+      theme_classic()+
+      labs(title = "Unique Songs by Year")+
+      xlab("Year")+
+      ylab("Cound of Unique Songs")+
+      theme(plot.title.position = 'plot')
+
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-1.png) (c)
+
+    ten_week_hit <- billboard %>% 
+      group_by(performer, song) %>% 
+      summarise(
+        count = n()
+      ) %>% 
+      arrange(desc(count)) %>% 
+      filter(count >= 10) %>% 
+      group_by(performer) %>% 
+      summarise(count= n()) %>% 
+      filter(count >=30)
+
+    ## `summarise()` has grouped output by 'performer'. You can override using the `.groups` argument.
+
+    ggplot(ten_week_hit, aes(fct_rev(fct_reorder(performer,count)),count))+
+      geom_bar(stat = "identity")+
+      coord_flip()+
+      theme_classic()+
+      labs(title = "Billboard Top Performers", subtitle = "Number of songs on billboard for at least 10 weeks")+
+      ylab("Count of Songs")+
+      xlab("Artist")+
+      theme(plot.title.position = 'plot')
+
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-1.png) \#\#
+Problem 4
 
 In this problem, we want to find the optimal value of K in our KNN
 regressions for each trim. We take the cross validation approach using 5
@@ -38,7 +159,7 @@ rule to determine our optimal K. That is we chose the largest K value
 that was within one standard error of the lowest average RMSE observed.
 Doing this with the 350 trims yields the following results.
 
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-2.png)
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-7-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-7-2.png)
 
 From the 350 Trim chart of RMSE versus K, we see that the optimal K is
 70, as such we fit the KNN model with k=70 to the test data as shown
@@ -46,7 +167,7 @@ above.
 
 Similarly, we can find an optimal K value for the AMG trim cars.
 
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-2.png)
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-8-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-8-2.png)
 
 We see that the 1SE approach yields an optimal k=40. We observe higher
 optimal K values for the 350 trim as compared to the AMG. This is due to
