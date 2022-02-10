@@ -1,9 +1,5 @@
 Here’s my graph.
 
-    knitr::opts_chunk$set(echo = FALSE)
-
-    library(tidyverse)
-
     ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
 
     ## v ggplot2 3.3.5     v purrr   0.3.4
@@ -14,8 +10,6 @@ Here’s my graph.
     ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
-
-    library(mosaic)
 
     ## Registered S3 method overwritten by 'mosaic':
     ##   method                           from   
@@ -53,11 +47,6 @@ Here’s my graph.
     ## 
     ##     max, mean, min, prod, range, sample, sum
 
-    library(airportr)
-    library(dplyr)
-    library(usmap)
-    library(maptools)
-
     ## Loading required package: sp
 
     ## Checking rgeos availability: FALSE
@@ -67,9 +56,6 @@ Here’s my graph.
     ##      Note: when rgeos is not available, polygon geometry     computations in maptools depend on gpclib,
     ##      which has a restricted licence. It is disabled by default;
     ##      to enable gpclib, type gpclibPermit()
-
-    library(ggplot2)
-    library(rgdal)
 
     ## Please note that rgdal will be retired by the end of 2023,
     ## plan transition to sf/stars/terra functions using GDAL and PROJ
@@ -95,38 +81,11 @@ Here’s my graph.
     ## 
     ##     project
 
-    library(viridis)
-
     ## Loading required package: viridisLite
-
-    library(here)
 
     ## here() starts at C:/Users/bjwil/OneDrive/Documents/GitHub/DataMining
 
-    library(colorspace)
-
-    ABIA <- read.csv(here("Data/ABIA.csv"))
-
-    ## Let's take a look at what average delays look like for flights out of Austin 
-
-    ABIA_stats = ABIA %>% 
-      filter(Origin == 'AUS') %>% 
-      group_by(Dest) %>% 
-      summarize(count = n(),
-                mean_arr_delay = mean(ArrDelay, na.rm=TRUE)) %>% 
-      filter(count > 499)
-
-    worstdelays <- ggplot(ABIA_stats) +
-      geom_col(aes(x = mean_arr_delay, fct_reorder(Dest, mean_arr_delay), fill = mean_arr_delay), show.legend = FALSE) +
-      scale_fill_continuous_sequential(palette = "Heat"
-                                        )  +
-      theme_classic() +
-      labs(title = "Worst Arrival Delays by Airport",
-           subtitle = "Arriving from Austin (At Least 500 Flights)",
-           x = "Average Flight Delay",
-           y = "Destination") +
-      geom_vline(aes(xintercept=5.5546)) +
-      geom_text(mapping=aes(x=5.5546, y=5, label="Group Average"), size=4, angle=90, vjust=-.3, hjust=.3)
+![](Airport_files/figure-markdown_strict/unnamed-chunk-1-1.png)
 
 ## Including Plots
 
@@ -135,8 +94,3 @@ You can also embed plots, for example:
 ## Including Plots
 
 You can also embed plots, for example:
-
-![](Airport_files/figure-markdown_strict/pressure-1.png)
-
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.
