@@ -21,6 +21,8 @@ billboard = read.csv('../data/billboard.csv')
 olympics_top20 = read.csv('../data/olympics_top20.csv')
 knit_print.data.frame <- lemon_print
 ```
+#Problem 2
+
 
 ```{r caption = "Top 10 Billbord Performers", render=lemon_print}
 top10 <- billboard %>% 
@@ -32,7 +34,7 @@ top10 <- billboard %>%
   head(10)
 top10
 ```
-
+#b
 ```{r}
 unique_songs <- billboard %>% 
   filter(year != 1958) %>% 
@@ -50,7 +52,7 @@ ggplot(unique_songs)+
   ylab("Cound of Unique Songs")+
   theme(plot.title.position = 'plot')
 ```
-
+#c
 ```{r}
 ten_week_hit <- billboard %>% 
   group_by(performer, song) %>% 
@@ -72,7 +74,8 @@ ggplot(ten_week_hit, aes(fct_rev(fct_reorder(performer,count)),count))+
   xlab("Artist")+
   theme(plot.title.position = 'plot')
 ```
-
+##Problem 3
+#a
 ```{r}
 top_height <-olympics_top20 %>% 
   filter(sport == 'Athletics') %>%
@@ -82,7 +85,8 @@ top_height <-olympics_top20 %>%
   )
 x <- top_height[1,2]
 ```
-The 95th percentile of height for female competitors is: `r x`
+The 95th percentile of height for female competitors in the Athletics events is: `r x`
+#b
 ```{r}
 height_variation <- olympics_top20 %>% 
   filter(sex == 'F') %>% 
@@ -94,6 +98,7 @@ height_variation <- olympics_top20 %>%
 
 ```
 The event with the highest standard deviation is: `r height_variation[1,1]` which had a standard deviation of `r round(height_variation[1,2],2)`.
+#c
 ```{r caption = "We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time."}
 swimmers <- olympics_top20 %>% 
   filter(sport == 'Swimming') %>% 
@@ -107,7 +112,7 @@ ggplot(data = swimmers, aes(x = year, y = avg_age,color = sex))+
   theme_classic()+
   xlab("Year")+
   ylab("Average Age")+
-  labs(title = "Average Age of Olympic Swimmers", caption = "We can the from the graph that there is an upward trend in both \n male and female average age with the age gap shrinking over time.")+
+  labs(title = "Average Age of Olympic Swimmers", caption = "We can infer from the graph that there is an upward trend in both \n male and female average age with the age gap shrinking over time.")+
   theme(plot.title.position = 'plot')
 ```
 \n
