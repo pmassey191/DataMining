@@ -1,5 +1,34 @@
-Problem 4
----------
+## Problem 1
+
+### Am I actually always late for my connecting flight?
+
+I have taken several flights out of Austin-Bergstrom International
+Airport. Because there are no direct flights from Austin to Madison, WI,
+I have to use connecting flights. This prompts the question: why does it
+always feel like I’m late arriving to my connecting flight?
+
+First, let’s look at the average arrival delay by airport. This dataset
+includes any destination airport with more than 500 flights from ABIA in
+2008 (n=26).
+
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-1-1.png)
+
+Congratulations to Salt Lake City for being early on average! Most
+airports, however, are late on average (around 5.5 minutes). What does
+this mean for my connecting flights? According to Business Wire, the
+major transfer hubs in the US are Dallas/Fort Worth (a major hub for
+American Airlines), Charlotte (also American), Atlanta (Delta),
+Chicago-O’Hare (United), and Denver (Frontier). It turns out, if you
+have to take a connecting flight, Charlotte (CLT) is your best bet,
+while Denver (DEN) and Dallas (DAL) perform about average for this
+group, at 5 minutes average arrival delay. Unfortunately for me and many
+other travellers, the major hubs in Atlanta (ATL) and Chicago (ORD) are
+in for some of the worst delays in the country for any flight out of
+Austin.
+
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+
+## Problem 4
 
 In this problem, we want to find the optimal value of K in our KNN
 regressions for each trim. We take the cross validation approach using 5
@@ -9,17 +38,17 @@ rule to determine our optimal K. That is we chose the largest K value
 that was within one standard error of the lowest average RMSE observed.
 Doing this with the 350 trims yields the following results.
 
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-2.png)
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-2.png)
 
 From the 350 Trim chart of RMSE versus K, we see that the optimal K is
-65, as such we fit the KNN model with k=65 to the test data as shown
+70, as such we fit the KNN model with k=70 to the test data as shown
 above.
 
 Similarly, we can find an optimal K value for the AMG trim cars.
 
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-3-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-3-2.png)
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-2.png)
 
-We see that the 1SE approach yields an optimal k=50. We observe higher
+We see that the 1SE approach yields an optimal k=40. We observe higher
 optimal K values for the 350 trim as compared to the AMG. This is due to
 the fact that the number of observations for the AMG trim is much lower
 than that of the 350. Thus to earn a lower RMSE, we need a more flexible
