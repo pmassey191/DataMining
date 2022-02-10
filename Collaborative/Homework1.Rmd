@@ -117,7 +117,7 @@ plot_usmap() +
 ```
 ## Problem 2
 (a)\n
-```{r caption = "Top 10 Billbord Performers", render=lemon_print}
+```{r}
 top10 <- billboard %>% 
   group_by(performer, song) %>% 
   summarise(
@@ -169,6 +169,49 @@ ggplot(ten_week_hit, aes(fct_rev(fct_reorder(performer,count)),count))+
   xlab("Artist")+
   theme(plot.title.position = 'plot')
 ```
+##Problem 3
+#a
+```{r}
+top_height <-olympics_top20 %>% 
+  filter(sport == 'Athletics') %>%
+  group_by(sex) %>% 
+  summarise(
+    '95th_height' = quantile(height,probs = .95)  
+  )
+x <- top_height[1,2]
+```
+The 95th percentile of height for female competitors in the Athletics events is: `r x`
+#b
+```{r}
+height_variation <- olympics_top20 %>% 
+  filter(sex == 'F') %>% 
+  group_by(event) %>% 
+  summarise(
+    sd = sd(height)
+  ) %>% 
+  arrange(desc(sd))
+
+```
+The event with the highest standard deviation is: `r height_variation[1,1]` which had a standard deviation of `r round(height_variation[1,2],2)`.
+#c
+```{r caption = "We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time."}
+swimmers <- olympics_top20 %>% 
+  filter(sport == 'Swimming') %>% 
+  group_by(year, sex) %>% 
+  summarise(
+    avg_age = mean(age)
+  )
+ggplot(data = swimmers, aes(x = year, y = avg_age,color = sex))+
+  geom_point()+
+  geom_line()+
+  theme_classic()+
+  xlab("Year")+
+  ylab("Average Age")+
+  labs(title = "Average Age of Olympic Swimmers", caption = "We can infer from the graph that there is an upward trend in both \n male and female average age with the age gap shrinking over time.")+
+  theme(plot.title.position = 'plot')
+```
+\n
+Prior to the 1952 Olympic Games, there appears to be a small number of participants for each year which is causing the large swings early on. After 1952 the amount of participating athletes becomes larger and stabilizes the mean of the age of the participants.
 ## Problem 4
 
 In this problem, we want to find the optimal value of K in our KNN regressions for each trim. We take the cross validation approach using 5 folds. In the chart of RMSE versus K for each trim there is an average RMSE mapped with one standard error bar. In each case, we use the "1SE" rule to determine our optimal K. That is we chose the largest K value that was within one standard error of the lowest average RMSE observed. Doing this with the 350 trims yields the following results.

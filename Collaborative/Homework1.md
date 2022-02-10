@@ -29,74 +29,35 @@ Austin.
 ![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-1.png) \#\#
 Problem 2 (a)
 
-<table>
-<caption>Top 10 Billbord Performers</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">performer</th>
-<th style="text-align: left;">song</th>
-<th style="text-align: right;">count</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Imagine Dragons</td>
-<td style="text-align: left;">Radioactive</td>
-<td style="text-align: right;">87</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">AWOLNATION</td>
-<td style="text-align: left;">Sail</td>
-<td style="text-align: right;">79</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Jason Mraz</td>
-<td style="text-align: left;">I’m Yours</td>
-<td style="text-align: right;">76</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">The Weeknd</td>
-<td style="text-align: left;">Blinding Lights</td>
-<td style="text-align: right;">76</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">LeAnn Rimes</td>
-<td style="text-align: left;">How Do I Live</td>
-<td style="text-align: right;">69</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">LMFAO Featuring Lauren Bennett &amp; GoonRock</td>
-<td style="text-align: left;">Party Rock Anthem</td>
-<td style="text-align: right;">68</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">OneRepublic</td>
-<td style="text-align: left;">Counting Stars</td>
-<td style="text-align: right;">68</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Adele</td>
-<td style="text-align: left;">Rolling In The Deep</td>
-<td style="text-align: right;">65</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Jewel</td>
-<td style="text-align: left;">Foolish Games/You Were Meant For Me</td>
-<td style="text-align: right;">65</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Carrie Underwood</td>
-<td style="text-align: left;">Before He Cheats</td>
-<td style="text-align: right;">64</td>
-</tr>
-</tbody>
-</table>
-
-Top 10 Billbord Performers
+    ## # A tibble: 10 × 3
+    ## # Groups:   performer [10]
+    ##    performer                                 song                          count
+    ##    <chr>                                     <chr>                         <int>
+    ##  1 Imagine Dragons                           Radioactive                      87
+    ##  2 AWOLNATION                                Sail                             79
+    ##  3 Jason Mraz                                I'm Yours                        76
+    ##  4 The Weeknd                                Blinding Lights                  76
+    ##  5 LeAnn Rimes                               How Do I Live                    69
+    ##  6 LMFAO Featuring Lauren Bennett & GoonRock Party Rock Anthem                68
+    ##  7 OneRepublic                               Counting Stars                   68
+    ##  8 Adele                                     Rolling In The Deep              65
+    ##  9 Jewel                                     Foolish Games/You Were Meant…    65
+    ## 10 Carrie Underwood                          Before He Cheats                 64
 
 (b) ![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 (c) ![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-1.png)
-\#\# Problem 4
+\#\#Problem 3 \#a
+
+The 95th percentile of height for female competitors in the Athletics
+events is: 183 \#b
+
+The event with the highest standard deviation is: Rowing Women’s Coxed
+Fours which had a standard deviation of 10.87. \#c
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-8-1.png) Prior
+to the 1952 Olympic Games, there appears to be a small number of
+participants for each year which is causing the large swings early on.
+After 1952 the amount of participating athletes becomes larger and
+stabilizes the mean of the age of the participants. \#\# Problem 4
 
 In this problem, we want to find the optimal value of K in our KNN
 regressions for each trim. We take the cross validation approach using 5
@@ -106,7 +67,7 @@ rule to determine our optimal K. That is we chose the largest K value
 that was within one standard error of the lowest average RMSE observed.
 Doing this with the 350 trims yields the following results.
 
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-7-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-7-2.png)
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-10-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-10-2.png)
 
 From the 350 Trim chart of RMSE versus K, we see that the optimal K is
 70, as such we fit the KNN model with k=70 to the test data as shown
@@ -114,7 +75,7 @@ above.
 
 Similarly, we can find an optimal K value for the AMG trim cars.
 
-![](Homework1_files/figure-markdown_strict/unnamed-chunk-8-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-8-2.png)
+![](Homework1_files/figure-markdown_strict/unnamed-chunk-11-1.png)![](Homework1_files/figure-markdown_strict/unnamed-chunk-11-2.png)
 
 We see that the 1SE approach yields an optimal k=40. We observe higher
 optimal K values for the 350 trim as compared to the AMG. This is due to
