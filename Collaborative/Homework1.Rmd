@@ -19,7 +19,7 @@ library(modelr)
 library(parallel)
 library(foreach)
 
-sclass <- read.csv("~/School/University of Texas-Austin/Classes/Data Mining/Data/sclass.csv")
+sclass <- read.csv("../data/sclass.csv")
 
 sclass_clean = sclass %>%
   select(trim, mileage, price)%>%
