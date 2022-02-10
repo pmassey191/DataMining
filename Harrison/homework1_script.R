@@ -125,11 +125,6 @@ View(sclass)
 sclass_clean = sclass %>%
   select(trim, mileage, price)%>%
   filter(trim=='65 AMG' | trim=='350')
-View(sclass_clean)
-
-ggplot(sclass_clean)+
-  geom_point(aes(x=mileage,y=price))+
-  facet_wrap(~trim)
 
 sclass_350 = sclass_clean%>%
   filter(trim=='350')
@@ -138,30 +133,47 @@ sclass350_split = initial_split(sclass_350, prop = 0.8)
 sclass350_train = training(sclass350_split)
 sclass350_test = testing(sclass350_split)
 
-lm1 = lm(price ~ mileage, data=sclass350_train)
-lm2 = lm(price ~ poly(mileage, 2), data=sclass350_train)
+lm1_350 = lm(price ~ mileage, data=sclass350_train)
+lm2_350 = lm(price ~ poly(mileage, 2), data=sclass350_train)
 
-linear_bench = rmse(lm1, sclass350_test)
-quad_bench = rmse(lm2, sclass350_test)
+linear_bench_350 = rmse(lm1_350, sclass350_test)
+quad_bench_350 = rmse(lm2_350, sclass350_test)
 
+knn_350 = foreach(i = 2:100, .combine='rbind') %do% {
+  err = rmse(knnreg(price ~ mileage, data=sclass350_train, k=i),sclass350_test)
+  }%>% as.data.frame()
 
-knn_opts = foreach(i = 2:nrow(sclass350_train)) %do% {
-  rmse(knnreg(price ~ mileage, data=sclass350_train, k=i),sclass350_test)
-  }
+knn_350 = data.frame(knn_350,2:100)
 
-data_k = as.data.frame(knn_opts)
+knn_350 = knn_350%>%
+  mutate(RMSE = V1, k = X2.100)%>%
+  select(RMSE,k)
 
-data_k = t(data_k)
+ggplot(knn_350)+
+  theme_classic()+
+  geom_line(aes(y=RMSE,x=k,color='dark green'))+
+  geom_hline(aes(yintercept=quad_bench_350,color='blue'))+
+  geom_hline(aes(yintercept=linear_bench_350,color='red'))+
+  labs(title = "350 Trim: RMSE for Different K Values\n", x = "K", y = "RMSE") +
+  scale_color_manual(labels = c("Quadratic RMSE","KNN RMSE","Linear RMSE"),
+                     values = c('blue', 'dark green','red'))+
+  theme(legend.title = element_blank())
 
-min(data_k)
+optimal_350 = knn_350 %>%
+  arrange(RMSE)
 
-ggplot(data_k)+
-  geom_line(aes(x=k))
+optk_350 = as.numeric(optimal_350[1,2])
 
+knn350_optk <- knnreg(price ~ mileage, data=sclass350_train, k=optk_350)
 
+sclass_350_test = sclass350_test %>%
+  mutate(price_pred = predict(knn350_optk, sclass350_test))
 
-
-
+ggplot(data = sclass_350_test) +
+  theme_classic()+
+  ggtitle(paste("350 Trim: Line of Fit for K=",optk_350, sep = ""))+
+  geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
+  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
 
 
 
@@ -175,8 +187,42 @@ sclassAMG_test = testing(sclassAMG_split)
 lm1_AMG = lm(price ~ mileage, data=sclassAMG_train)
 lm2_AMG = lm(price ~ poly(mileage, 2), data=sclassAMG_train)
 
-knn_opts_AMG = foreach(i = 2:nrow(sclassAMG_train)) %do% {
-  mk = knnreg(price ~ mileage, data=sclassAMG_train, k=i)
-  rmse(mk, sclassAMG_test)
-}
+linear_bench_AMG = rmse(lm1_AMG, sclassAMG_test)
+quad_bench_AMG = rmse(lm2_AMG, sclassAMG_test)
+
+knn_AMG = foreach(i = 2:100, .combine='rbind') %do% {
+  err = rmse(knnreg(price ~ mileage, data=sclassAMG_train, k=i),sclassAMG_test)
+}%>% as.data.frame()
+
+knn_AMG = data.frame(knn_AMG,2:100)
+
+knn_AMG = knn_AMG%>%
+  mutate(RMSE = V1, k = X2.100)%>%
+  select(RMSE,k)
+
+ggplot(knn_AMG)+
+  theme_classic()+
+  geom_line(aes(y=RMSE,x=k,color='dark green'))+
+  geom_hline(aes(yintercept=quad_bench_AMG,color='blue'))+
+  geom_hline(aes(yintercept=linear_bench_AMG,color='red'))+
+  labs(title = "AMG Trim: RMSE for Different K Values\n", x = "K", y = "RMSE") +
+  scale_color_manual(labels = c("Quadratic RMSE","KNN RMSE","Linear RMSE"),
+                     values = c('blue', 'dark green','red'))+
+  theme(legend.title = element_blank())
+
+optimal_AMG = knn_AMG %>%
+  arrange(RMSE)
+
+optk_AMG = as.numeric(optimal_AMG[1,2])
+
+knnAMG_optk <- knnreg(price ~ mileage, data=sclassAMG_train, k=optk_AMG)
+
+sclass_AMG_test = sclassAMG_test %>%
+  mutate(price_pred = predict(knnAMG_optk, sclassAMG_test))
+
+ggplot(data = sclass_AMG_test) +
+  theme_classic()+
+  ggtitle(paste("AMG Trim: Line of Fit for K=",optk_AMG, sep = ""))+
+  geom_point(mapping = aes(x = mileage, y = price), alpha=0.2) + 
+  geom_line(aes(x = mileage, y = price_pred), color='red', size=1.5)
 
