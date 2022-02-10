@@ -4,7 +4,7 @@ output: md_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 library(tidyverse)
 library(mosaic)
 library(airportr)
@@ -18,11 +18,11 @@ library(here)
 library(colorspace)
 library(lemon)
 billboard = read.csv('../data/billboard.csv')
+olympics_top20 = read.csv('../data/olympics_top20.csv')
 knit_print.data.frame <- lemon_print
 ```
 
-
-```{r caption="Data frame is now printed using `kable`.",render=lemon_print}
+```{r caption = "Top 10 Billbord Performers", render=lemon_print}
 top10 <- billboard %>% 
   group_by(performer, song) %>% 
   summarise(
@@ -32,4 +32,83 @@ top10 <- billboard %>%
   head(10)
 top10
 ```
+
+```{r}
+unique_songs <- billboard %>% 
+  filter(year != 1958) %>% 
+  filter(year != 2021) %>% 
+  group_by(year) %>% 
+  distinct(song_id) %>% 
+  summarise(
+    count = n()
+  )
+ggplot(unique_songs)+
+  geom_line(aes(x = year, y = count),color = "blue")+
+  theme_classic()+
+  labs(title = "Unique Songs by Year")+
+  xlab("Year")+
+  ylab("Cound of Unique Songs")+
+  theme(plot.title.position = 'plot')
+```
+
+```{r}
+ten_week_hit <- billboard %>% 
+  group_by(performer, song) %>% 
+  summarise(
+    count = n()
+  ) %>% 
+  arrange(desc(count)) %>% 
+  filter(count >= 10) %>% 
+  group_by(performer) %>% 
+  summarise(count= n()) %>% 
+  filter(count >=30)
+
+ggplot(ten_week_hit, aes(fct_rev(fct_reorder(performer,count)),count))+
+  geom_bar(stat = "identity")+
+  coord_flip()+
+  theme_classic()+
+  labs(title = "Billboard Top Performers", subtitle = "Number of songs on billboard for at least 10 weeks")+
+  ylab("Count of Songs")+
+  xlab("Artist")+
+  theme(plot.title.position = 'plot')
+```
+
+```{r}
+top_height <-olympics_top20 %>% 
+  filter(sport == 'Athletics') %>%
+  group_by(sex) %>% 
+  summarise(
+    '95th_height' = quantile(height,probs = .95)  
+  )
+x <- top_height[1,2]
+```
+The 95th percentile of height for female competitors is: `r x`
+```{r}
+height_variation <- olympics_top20 %>% 
+  filter(sex == 'F') %>% 
+  group_by(event) %>% 
+  summarise(
+    sd = sd(height)
+  ) %>% 
+  arrange(desc(sd))
+
+```
+The event with the highest standard deviation is: `r height_variation[1,1]` which had a standard deviation of `r round(height_variation[1,2],2)`.
+```{r caption = "We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time."}
+swimmers <- olympics_top20 %>% 
+  filter(sport == 'Swimming') %>% 
+  group_by(year, sex) %>% 
+  summarise(
+    avg_age = mean(age)
+  )
+ggplot(data = swimmers, aes(x = year, y = avg_age,color = sex))+
+  geom_point()+
+  geom_line()+
+  theme_classic()+
+  xlab("Year")+
+  ylab("Average Age")+
+  labs(title = "Average Age of Olympic Swimmers", caption = "We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time.")+
+  theme(plot.title.position = 'plot')
+```
+Prior to the 1952 Olympic Games, there appears to be a small number of participants for each year which is causing the large swings early on. After 1952 the amount of participating athletes becomes larger and stabilizes the mean of the age of the participants. We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time.
 
