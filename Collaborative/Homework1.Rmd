@@ -115,7 +115,9 @@ plot_usmap() +
   guides(size=guide_legend(title="Average Delay (Mins)"), color=guide_legend(title="Average Delay (Mins)"))
 
 ```
+\n
 ## Problem 2
+\n
 (a)\n
 ```{r render=lemon_print}
 top10 <- billboard %>% 
