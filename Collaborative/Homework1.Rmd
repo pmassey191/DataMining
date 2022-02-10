@@ -117,7 +117,7 @@ plot_usmap() +
 ```
 ## Problem 2
 (a)\n
-```{r}
+```{r render=lemon_print}
 top10 <- billboard %>% 
   group_by(performer, song) %>% 
   summarise(

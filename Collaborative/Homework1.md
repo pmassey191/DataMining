@@ -29,20 +29,67 @@ Austin.
 ![](Homework1_files/figure-markdown_strict/unnamed-chunk-2-1.png) \#\#
 Problem 2 (a)
 
-    ## # A tibble: 10 × 3
-    ## # Groups:   performer [10]
-    ##    performer                                 song                          count
-    ##    <chr>                                     <chr>                         <int>
-    ##  1 Imagine Dragons                           Radioactive                      87
-    ##  2 AWOLNATION                                Sail                             79
-    ##  3 Jason Mraz                                I'm Yours                        76
-    ##  4 The Weeknd                                Blinding Lights                  76
-    ##  5 LeAnn Rimes                               How Do I Live                    69
-    ##  6 LMFAO Featuring Lauren Bennett & GoonRock Party Rock Anthem                68
-    ##  7 OneRepublic                               Counting Stars                   68
-    ##  8 Adele                                     Rolling In The Deep              65
-    ##  9 Jewel                                     Foolish Games/You Were Meant…    65
-    ## 10 Carrie Underwood                          Before He Cheats                 64
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">performer</th>
+<th style="text-align: left;">song</th>
+<th style="text-align: right;">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Imagine Dragons</td>
+<td style="text-align: left;">Radioactive</td>
+<td style="text-align: right;">87</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AWOLNATION</td>
+<td style="text-align: left;">Sail</td>
+<td style="text-align: right;">79</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jason Mraz</td>
+<td style="text-align: left;">I’m Yours</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The Weeknd</td>
+<td style="text-align: left;">Blinding Lights</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LeAnn Rimes</td>
+<td style="text-align: left;">How Do I Live</td>
+<td style="text-align: right;">69</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LMFAO Featuring Lauren Bennett &amp; GoonRock</td>
+<td style="text-align: left;">Party Rock Anthem</td>
+<td style="text-align: right;">68</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">OneRepublic</td>
+<td style="text-align: left;">Counting Stars</td>
+<td style="text-align: right;">68</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adele</td>
+<td style="text-align: left;">Rolling In The Deep</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jewel</td>
+<td style="text-align: left;">Foolish Games/You Were Meant For Me</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Carrie Underwood</td>
+<td style="text-align: left;">Before He Cheats</td>
+<td style="text-align: right;">64</td>
+</tr>
+</tbody>
+</table>
 
 (b) ![](Homework1_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 (c) ![](Homework1_files/figure-markdown_strict/unnamed-chunk-5-1.png)
