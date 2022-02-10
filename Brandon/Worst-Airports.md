@@ -1,6 +1,6 @@
 ## Problem 1
 
-# Am I actually always late for my connecting flight?
+### Am I actually always late for my connecting flight?
 
 I have taken several flights out of Austin-Bergstrom International
 Airport. Because there are no direct flights from Austin to Madison, WI,

@@ -5,7 +5,7 @@ output: md_document
 
 ## Problem 1
 
-# Am I actually always late for my connecting flight?
+### Am I actually always late for my connecting flight?
 
 I have taken several flights out of Austin-Bergstrom International Airport. Because there are no direct flights from Austin to Madison, WI, I have to use connecting flights. This prompts the question: why does it always feel like I'm late arriving to my connecting flight?
 
