@@ -1,14 +1,29 @@
-## Worst Airports
+## Am I actually always late for my connecting flight?
 
-You can also embed plots, for example:
+I have taken several flights out of Austin-Bergstrom International
+Airport. Because there are no direct flights from Austin to Madison, WI,
+I have to use connecting flights. This prompts the question: why does it
+always feel like I’m late arriving to my connecting flight?
+
+First, let’s look at the average arrival delay by airport. This dataset
+includes any destination airport with more than 500 flights from ABIA in
+2008 (n=26).
 
 ![](Worst-Airports_files/figure-markdown_strict/unnamed-chunk-1-1.png)
 
-## Worst Connecting Airports
+Congratulations to Salt Lake City for being early on average! Most
+airports, however, are late on average. The average delay for this
+entire group was around 5 and a half minutes.
 
-You can also embed plots, for example:
+What does this mean for my connecting flights? According to Business
+Wire, the major transfer hubs in the US are Dallas/Fort Worth (a major
+hub for American Airlines), Charlotte (also American), Atlanta (Delta),
+Chicago-O’Hare (United), and Denver (Frontier). It turns out, if you
+have to take a connecting flight, Charlotte (CLT) is your best bet,
+while Denver (DEN) and Dallas (DAL) perform about average for this
+group, at 5 minutes average arrival delay. Unfortunately for me and many
+other travellers, the major hubs in Atlanta (ATL) and Chicago (ORD) are
+in for some of the worst delays in the country for any flight out of
+Austin.
 
 ![](Worst-Airports_files/figure-markdown_strict/unnamed-chunk-2-1.png)
-
-Note that the `echo = FALSE` parameter was added to the code chunk to
-prevent printing of the R code that generated the plot.

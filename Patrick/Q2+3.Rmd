@@ -1,10 +1,28 @@
-library(mosaic)
-library(tidyverse)
-library(here)
-library(ggthemes)
-#Number 2
-billboard = read.csv('../data/billboard.csv')
+---
+title: "q2+3"
+output: md_document
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+library(tidyverse)
+library(mosaic)
+library(airportr)
+library(dplyr)
+library(usmap)
+library(maptools)
+library(ggplot2)
+library(rgdal)
+library(viridis)
+library(here)
+library(colorspace)
+library(lemon)
+billboard = read.csv('../data/billboard.csv')
+olympics_top20 = read.csv('../data/olympics_top20.csv')
+knit_print.data.frame <- lemon_print
+```
+
+```{r caption = "Top 10 Billbord Performers", render=lemon_print}
 top10 <- billboard %>% 
   group_by(performer, song) %>% 
   summarise(
@@ -13,8 +31,9 @@ top10 <- billboard %>%
   arrange(desc(count)) %>% 
   head(10)
 top10
+```
 
-
+```{r}
 unique_songs <- billboard %>% 
   filter(year != 1958) %>% 
   filter(year != 2021) %>% 
@@ -30,7 +49,9 @@ ggplot(unique_songs)+
   xlab("Year")+
   ylab("Cound of Unique Songs")+
   theme(plot.title.position = 'plot')
+```
 
+```{r}
 ten_week_hit <- billboard %>% 
   group_by(performer, song) %>% 
   summarise(
@@ -50,24 +71,30 @@ ggplot(ten_week_hit, aes(fct_rev(fct_reorder(performer,count)),count))+
   ylab("Count of Songs")+
   xlab("Artist")+
   theme(plot.title.position = 'plot')
+```
 
-
-#Number 3
-olympics_top20 = read.csv('../data/olympics_top20.csv')
-
+```{r}
 top_height <-olympics_top20 %>% 
-  group_by(sport) %>% 
+  filter(sport == 'Athletics') %>%
+  group_by(sex) %>% 
   summarise(
     '95th_height' = quantile(height,probs = .95)  
   )
-
+x <- top_height[1,2]
+```
+The 95th percentile of height for female competitors is: `r x`
+```{r}
 height_variation <- olympics_top20 %>% 
+  filter(sex == 'F') %>% 
   group_by(event) %>% 
   summarise(
     sd = sd(height)
   ) %>% 
   arrange(desc(sd))
 
+```
+The event with the highest standard deviation is: `r height_variation[1,1]` which had a standard deviation of `r round(height_variation[1,2],2)`.
+```{r caption = "We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time."}
 swimmers <- olympics_top20 %>% 
   filter(sport == 'Swimming') %>% 
   group_by(year, sex) %>% 
@@ -80,48 +107,9 @@ ggplot(data = swimmers, aes(x = year, y = avg_age,color = sex))+
   theme_classic()+
   xlab("Year")+
   ylab("Average Age")+
-  labs(title = "Average Age of Olympic Swimmers")+
+  labs(title = "Average Age of Olympic Swimmers", caption = "We can the from the graph that there is an upward trend in both \n male and female average age with the age gap shrinking over time.")+
   theme(plot.title.position = 'plot')
-#Number 4
-
-sclass = read.csv('../data/sclass.csv')
-
-trim1 <- sclass %>% 
-  filter(trim == '350')
-
-trim2 <- sclass %>% 
-  filter(trim == '65 AMG')
-
-trim1_split = initial_split(trim1, prop=0.8) 
-trim1_train = training(trim1_split)
-trim1_test = testing(trim1_split)
-
-k_grid = seq(2,100,by = 2)
-
-trim1_knn = foreach(k = k_grid, .combine='rbind') %do% { 
-  rmse(knnreg(price ~ mileage, data=trim1_train, k=k), trim1_test)
-}
-trim1_rmse = data.frame(trim1_knn,k_grid)
-
-
-ggplot(data = trim1_rmse, aes(x = k_grid, y = trim1_knn))+
-  geom_point()+
-  geom_line()
-
-
-trim2_split = initial_split(trim2, prop=0.8) 
-trim2_train = training(trim2_split)
-trim2_test = testing(trim2_split)
-
-trim2_rmse = foreach(k = k_grid, .combine='rbind') %do% {
-  model = knnreg(price ~ mileage, k=k, data = trim2_train, use.all=FALSE)
-  errs = rmse(model,trim2_test)
-  c(k=k, err = mean(errs))
-} %>% as.data.frame
-
-min(trim1_rmse$errs)
-
-
-
-
+```
+\n
+Prior to the 1952 Olympic Games, there appears to be a small number of participants for each year which is causing the large swings early on. After 1952 the amount of participating athletes becomes larger and stabilizes the mean of the age of the participants.
 

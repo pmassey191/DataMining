@@ -3,9 +3,11 @@ title: "Worst Airports"
 output: md_document
 ---
 
-## Worst Airports
+## Am I actually always late for my connecting flight?
 
-You can also embed plots, for example:
+I have taken several flights out of Austin-Bergstrom International Airport. Because there are no direct flights from Austin to Madison, WI, I have to use connecting flights. This prompts the question: why does it always feel like I'm late arriving to my connecting flight?
+
+First, let's look at the average arrival delay by airport. This dataset includes any destination airport with more than 500 flights from ABIA in 2008 (n=26). 
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -37,19 +39,18 @@ ggplot(ABIA_stats) +
   scale_fill_continuous_sequential(palette = "Heat"
                                     )  +
   theme_classic() +
-  labs(title = "Worst Arrival Delays by Airport",
+  labs(title = "Arrival Delays by Destination Airport",
        subtitle = "Arriving from Austin (At Least 500 Flights)",
-       x = "Average Flight Delay",
+       x = "Average Flight Delay (Mins)",
        y = "Destination") +
   geom_vline(aes(xintercept=5.5546)) +
   geom_text(mapping=aes(x=5.5546, y=5, label="Group Average"), size=4, angle=90, vjust=-.3, hjust=.3)
 
 ```
 
+Congratulations to Salt Lake City for being early on average! Most airports, however, are late on average. The average delay for this entire group was around 5 and a half minutes. 
 
-## Worst Connecting Airports
-
-You can also embed plots, for example:
+What does this mean for my connecting flights? According to Business Wire, the major transfer hubs in the US are Dallas/Fort Worth (a major hub for American Airlines), Charlotte (also American), Atlanta (Delta), Chicago-O'Hare (United), and Denver (Frontier). It turns out, if you have to take a connecting flight, Charlotte (CLT) is your best bet, while Denver (DEN) and Dallas (DAL) perform about average for this group, at 5 minutes average arrival delay. Unfortunately for me and many other travellers, the major hubs in Atlanta (ATL) and Chicago (ORD) are in for some of the worst delays in the country for any flight out of Austin. 
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -87,23 +88,22 @@ ABIA_hubs <- ABIA_transformed %>%
 
 ## Plot to our map
 
+
 plot_usmap() +
   geom_point(data = ABIA_transformed, aes(x = Longitude.1, y = Latitude.1, colour = mean_arr_delay, size = mean_arr_delay),
              alpha = 0.8) +
-  scale_color_continuous_sequential(palette = "Heat", guide = "legend") +
-  scale_size_continuous(range = c(1, 15)) +
+  scale_color_continuous_sequential(palette = "Heat", guide = "legend", breaks = c(0, 3, 6, 9, 12, 15), limits = c(0, 15)) +
+  scale_size_continuous(range = c(1, 20), breaks = c(0, 3, 6, 9, 12, 15), limits = c(0, 15)) +
   ggrepel::geom_label_repel(data = ABIA_hubs,
                             aes(x = Longitude.1, y = Latitude.1, label = Dest),
                             size = 3, alpha = 0.8,
                             label.r = unit(0.5, "lines"), label.size = 0.5,
                             segment.color = "red", segment.size = 1,
                             seed = 1002) +
-  labs(title = "Worst Arrival Delays by Airport",
+  labs(title = "Arrival Delays by Destination Airport",
        subtitle = "Arriving from Austin (At Least 500 Flights)"
-       ) + 
+  ) + 
   theme(legend.position = "right") +
-  guides(size=guide_legend(title="Arrival Delay"), color=guide_legend(title="Arrival Delay"))
+  guides(size=guide_legend(title="Average Delay (Mins)"), color=guide_legend(title="Average Delay (Mins)"))
 
 ```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
