@@ -107,8 +107,8 @@ ggplot(data = swimmers, aes(x = year, y = avg_age,color = sex))+
   theme_classic()+
   xlab("Year")+
   ylab("Average Age")+
-  labs(title = "Average Age of Olympic Swimmers", caption = "We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time.")+
+  labs(title = "Average Age of Olympic Swimmers", caption = "We can the from the graph that there is an upward trend in both \n male and female average age with the age gap shrinking over time.")+
   theme(plot.title.position = 'plot')
 ```
-Prior to the 1952 Olympic Games, there appears to be a small number of participants for each year which is causing the large swings early on. After 1952 the amount of participating athletes becomes larger and stabilizes the mean of the age of the participants. We can the from the graph that there is an upward trend in both male and female average age with the age gap shrinking over time.
+Prior to the 1952 Olympic Games, there appears to be a small number of participants for each year which is causing the large swings early on. After 1952 the amount of participating athletes becomes larger and stabilizes the mean of the age of the participants.
 
