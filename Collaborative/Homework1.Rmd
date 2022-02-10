@@ -231,21 +231,14 @@ Prior to the 1952 Olympic Games, there appears to be a small number of participa
 In this problem, we want to find the optimal value of K in our KNN regressions for each trim. We take the cross validation approach using 5 folds. In the chart of RMSE versus K for each trim there is an average RMSE mapped with one standard error bar. In each case, we use the "1SE" rule to determine our optimal K. That is we chose the largest K value that was within one standard error of the lowest average RMSE observed. Doing this with the 350 trims yields the following results.
 
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
-library(tidyverse)
-library(mosaic)
-library(ggplot2)
-library(rsample)
-library(caret)
-library(modelr)
-library(parallel)
-library(foreach)
-
 sclass <- read.csv("../data/sclass.csv")
 
+# Cleaning our original data set to just the columns and trims of interest
 sclass_clean = sclass %>%
   select(trim, mileage, price)%>%
   filter(trim=='65 AMG' | trim=='350')
 
+# Setting the number of folds and k values to be used in KNN regression
 K_folds = 5
 k_grid = c(2:30,35,40,45,50,55,60,65,70,80, 90,100)
 
@@ -254,9 +247,11 @@ k_grid = c(2:30,35,40,45,50,55,60,65,70,80, 90,100)
 
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 
+# Here we want to focus on just the 350
 sclass_350 = sclass_clean%>%
   filter(trim=='350')
 
+# Cross validating with the K-Folds approach
 sclass350_folds = crossv_kfold(sclass_350, k=K_folds)
 
 cv_grid_350 = foreach(k = k_grid, .combine='rbind') %dopar% {
@@ -265,6 +260,7 @@ cv_grid_350 = foreach(k = k_grid, .combine='rbind') %dopar% {
   c(k=k, err = mean(errs), std_err = sd(errs)/sqrt(K_folds))
 } %>% as.data.frame
 
+# Plotting our RMSE averages versus K
 ggplot(cv_grid_350) + 
   geom_point(aes(x=k, y=err))+
   scale_x_log10()+
@@ -272,12 +268,16 @@ ggplot(cv_grid_350) +
   labs(title = "350 Trim: RMSE for Different K Values\n", x = "K", y = "RMSE") +
   theme_classic()
 
+# We will now find our optimal K with the 1SE approach
+# First we arrange the data set to find the lowest average RMSE
 opt_350 = cv_grid_350%>%
   arrange(err)
 
+# This provides us with the 1 standard error allowance and isolates the associated K value
 max_err_350 = opt_350[1,2] + opt_350[1,3]
 min_k_350 = opt_350[1,1]
 
+# To find the optimal K within 1 standard error, we choose only those K larger than the minimum we found. Then we find the lowest positive difference to determine the optimal K
 opt_350 = opt_350%>%
   filter(k >= min_k_350)%>%
   mutate(diff = max_err_350 - err)%>%
@@ -286,15 +286,20 @@ opt_350 = opt_350%>%
 
 optk_350 = opt_350[1,1]
 
+# We now want to fit a KNN model to testing data with our optimal K
+# Creating a train-test split
 sclass350_split = initial_split(sclass_350, prop = 0.8)
 sclass350_train = training(sclass350_split)
 sclass350_test = testing(sclass350_split)
 
+# Running the KNN regression with optimal K
 knn350_optk <- knnreg(price ~ mileage, data=sclass350_train, k=optk_350)
 
+# Creating line of fit
 sclass_350_test = sclass350_test %>%
   mutate(price_pred = predict(knn350_optk, sclass350_test))
 
+# Plotting our line of fit
 ggplot(data = sclass_350_test) +
   theme_classic()+
   ggtitle(paste("350 Trim: Line of Fit for K=",optk_350, sep = ""))+
@@ -313,6 +318,8 @@ Similarly, we can find an optimal K value for the AMG trim cars.
 
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 
+
+# The same work flow from the 350 trim is followed for the AMG trim
 sclass_AMG = sclass_clean%>%
   filter(trim=='65 AMG')
 
