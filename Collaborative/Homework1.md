@@ -1,3 +1,7 @@
+# Homework 1
+
+Patrick Massey, Harrison Snell, Brandon Williams
+
 ## Problem 1
 
 ### Am I actually always late for my connecting flight?

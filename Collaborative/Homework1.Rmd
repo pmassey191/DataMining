@@ -25,6 +25,9 @@ library(parallel)
 library(foreach)
 ```
 
+# Homework 1 
+
+Patrick Massey, Harrison Snell, Brandon Williams
 
 ## Problem 1
 
