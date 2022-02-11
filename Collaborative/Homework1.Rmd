@@ -72,7 +72,7 @@ Congratulations to Salt Lake City for being early on average! Most airports, how
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ## Let's also have only Austin outgoing flights
-airports <- airports %>% 
+airports1 <- airports %>% 
   rename(Dest = IATA)
 
 ABIA_outbound <- ABIA %>% 
@@ -80,7 +80,7 @@ ABIA_outbound <- ABIA %>%
 
 ## Let's join our tables
 
-ABIA_locations <- inner_join(x = ABIA_outbound, y = airports, by = 'Dest')
+ABIA_locations <- inner_join(x = ABIA_outbound, y = airports1, by = 'Dest')
 
 
 ## We need to reorganize the data and map it to the usmap package:
