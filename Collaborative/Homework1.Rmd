@@ -23,6 +23,7 @@ library(caret)
 library(modelr)
 library(parallel)
 library(foreach)
+library(ggrepel)
 ```
 
 # Homework 1 
@@ -68,7 +69,7 @@ ggplot(ABIA_stats) +
 
 Congratulations to Salt Lake City for being early on average! Most airports, however, are late on average (around 5.5 minutes). What does this mean for my connecting flights? According to Business Wire, the major transfer hubs in the US are Dallas/Fort Worth (a major hub for American Airlines), Charlotte (also American), Atlanta (Delta), Chicago-O'Hare (United), and Denver (Frontier). It turns out, if you have to take a connecting flight, Charlotte (CLT) is your best bet, while Denver (DEN) and Dallas (DAL) perform about average for this group, at 5 minutes average arrival delay. Unfortunately for me and many other travellers, the major hubs in Atlanta (ATL) and Chicago (ORD) are in for some of the worst delays in the country for any flight out of Austin. 
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 ## Let's also have only Austin outgoing flights
 airports <- airports %>% 
@@ -235,9 +236,6 @@ ggplot(data = swimmers, aes(x = year, y = avg_age,color = sex))+
 Prior to the 1952 Olympic Games, there appears to be a small number of participants for each year which is causing the large swings early on. After 1952 the amount of participating athletes becomes larger and stabilizes the mean of the age of the participants.
 
 ## Problem 4
-
-In this problem, we want to find the optimal value of K in our KNN regressions for each trim. We take the cross validation approach using 5 folds. In the chart of RMSE versus K for each trim there is an average RMSE mapped with one standard error bar. In each case, we use the "1SE" rule to determine our optimal K. That is we chose the largest K value that was within one standard error of the lowest average RMSE observed. Doing this with the 350 trims yields the following results.
-
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 sclass <- read.csv("../data/sclass.csv")
 
@@ -246,6 +244,12 @@ sclass_clean = sclass %>%
   select(trim, mileage, price)%>%
   filter(trim=='65 AMG' | trim=='350')
 
+sclass_350 = sclass_clean%>%
+  filter(trim=='350')
+
+sclass_AMG = sclass_clean%>%
+  filter(trim=='65 AMG')
+
 # Setting the number of folds and k values to be used in KNN regression
 K_folds = 5
 k_grid = c(2:30,35,40,45,50,55,60,65,70,80, 90,100)
@@ -253,11 +257,79 @@ k_grid = c(2:30,35,40,45,50,55,60,65,70,80, 90,100)
 ```
 
 
+In this problem, we want to find the optimal value of K in our KNN regressions for each trim. We began our approach by checking different K values for each trim and plotting them based on the RMSE as shown below.
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 
-# Here we want to focus on just the 350
-sclass_350 = sclass_clean%>%
-  filter(trim=='350')
+sclass350_split = initial_split(sclass_350, prop = 0.8)
+sclass350_train = training(sclass350_split)
+sclass350_test = testing(sclass350_split)
+
+lm1_350 = lm(price ~ mileage, data=sclass350_train)
+lm2_350 = lm(price ~ poly(mileage, 2), data=sclass350_train)
+
+linear_bench_350 = rmse(lm1_350, sclass350_test)
+quad_bench_350 = rmse(lm2_350, sclass350_test)
+
+knn_350 = foreach(i = 2:100, .combine='rbind') %do% {
+  err = rmse(knnreg(price ~ mileage, data=sclass350_train, k=i),sclass350_test)
+  }%>% as.data.frame()
+
+knn_350 = data.frame(knn_350,2:100)
+
+knn_350 = knn_350%>%
+  mutate(RMSE = V1, k = X2.100)%>%
+  select(RMSE,k)
+
+ggplot(knn_350)+
+  theme_classic()+
+  geom_line(aes(y=RMSE,x=k,color='dark green'))+
+  geom_hline(aes(yintercept=quad_bench_350,color='blue'))+
+  geom_hline(aes(yintercept=linear_bench_350,color='red'))+
+  labs(title = "350 Trim: RMSE for Different K Values\n", x = "K", y = "RMSE") +
+  scale_color_manual(labels = c("Quadratic RMSE","KNN RMSE","Linear RMSE"),
+                     values = c('blue', 'dark green','red'))+
+  theme(legend.title = element_blank())
+
+
+sclassAMG_split = initial_split(sclass_AMG, prop = 0.8)
+sclassAMG_train = training(sclassAMG_split)
+sclassAMG_test = testing(sclassAMG_split)
+
+lm1_AMG = lm(price ~ mileage, data=sclassAMG_train)
+lm2_AMG = lm(price ~ poly(mileage, 2), data=sclassAMG_train)
+
+linear_bench_AMG = rmse(lm1_AMG, sclassAMG_test)
+quad_bench_AMG = rmse(lm2_AMG, sclassAMG_test)
+
+knn_AMG = foreach(i = 2:100, .combine='rbind') %do% {
+  err = rmse(knnreg(price ~ mileage, data=sclassAMG_train, k=i),sclassAMG_test)
+}%>% as.data.frame()
+
+knn_AMG = data.frame(knn_AMG,2:100)
+
+knn_AMG = knn_AMG%>%
+  mutate(RMSE = V1, k = X2.100)%>%
+  select(RMSE,k)
+
+ggplot(knn_AMG)+
+  theme_classic()+
+  geom_line(aes(y=RMSE,x=k,color='dark green'))+
+  geom_hline(aes(yintercept=quad_bench_AMG,color='blue'))+
+  geom_hline(aes(yintercept=linear_bench_AMG,color='red'))+
+  labs(title = "AMG Trim: RMSE for Different K Values\n", x = "K", y = "RMSE") +
+  scale_color_manual(labels = c("Quadratic RMSE","KNN RMSE","Linear RMSE"),
+                     values = c('blue', 'dark green','red'))+
+  theme(legend.title = element_blank())
+```
+
+
+From these plots it is possible to determine a value of K that yields the minimum RMSE. However, checking over different splits of the train-test set, we can end up with varied values of K. Furthermore, it is not clear that the optimal value of K corresponds to the minimum value of K, because splits result in a very small K, which may not be the optimal though it has the minimum RMSE. Thus, we utilize cross-validation to find an optimal K.
+
+We take the cross validation approach using 5 folds. In the chart of RMSE versus K for each trim there is an average RMSE mapped with one standard error bar. In each case, we use the "1SE" rule to determine our optimal K. That is we chose the largest K value that was within one standard error of the lowest average RMSE observed. Doing this with the 350 trims yields the following results.
+
+
+```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
 
 # Cross validating with the K-Folds approach
 sclass350_folds = crossv_kfold(sclass_350, k=K_folds)
@@ -328,9 +400,6 @@ Similarly, we can find an optimal K value for the AMG trim cars.
 
 
 # The same work flow from the 350 trim is followed for the AMG trim
-sclass_AMG = sclass_clean%>%
-  filter(trim=='65 AMG')
-
 sclassAMG_folds = crossv_kfold(sclass_AMG, k=K_folds)
 
 cv_grid_AMG = foreach(k = k_grid, .combine='rbind') %dopar% {
