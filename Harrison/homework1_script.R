@@ -7,6 +7,26 @@ library(modelr)
 library(parallel)
 library(foreach)
 
+
+
+library(tidyverse)
+library(mosaic)
+library(airportr)
+library(dplyr)
+library(usmap)
+library(maptools)
+library(ggplot2)
+library(rgdal)
+library(viridis)
+library(here)
+library(colorspace)
+library(lemon)
+library(rsample)
+library(caret)
+library(modelr)
+library(parallel)
+library(foreach)
+
 # Problem 1
 ABIA <- read.csv("~/School/University of Texas-Austin/Classes/Data Mining/Data/ABIA.csv")
 View(ABIA)
