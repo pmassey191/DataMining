@@ -5,7 +5,7 @@ saratoga_split = initial_split(SaratogaHouses, prop = 0.8)
 saratoga_train = training(saratoga_split)
 saratoga_test = testing(saratoga_split)
 
-saratoga_folds = crossv_kfold(SaratogaHouses, k=K_folds)
+
 
 library(tidyverse)
 library(ggplot2)
@@ -17,8 +17,9 @@ library(caret)
 
 data(SaratogaHouses)
 
-K_folds = 10
+K_folds = 5
 k_grid = c(2:30,35,40,45,50,55,60,65,70,80, 90,100)
+saratoga_folds = crossv_kfold(SaratogaHouses, k=K_folds)
 
 training <- foreach (i = 1:K_folds) %do% {
   nam <- paste("train_", i, sep = "")
