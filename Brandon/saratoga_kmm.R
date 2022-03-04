@@ -24,7 +24,7 @@ lm_medium = lm(price ~ lotSize + age + livingArea + pctCollege + bedrooms +
                  fireplaces + bathrooms + rooms + heating + fuel + centralAir, data=saratoga_train)
 rmse(lm_medium, saratoga_test)
 
-lm_better = lm(price ~ . - pctCollege - sewer - newConstruction, data=saratoga_train)
+lm_better = lm(price ~ . - pctCollege - sewer - newConstruction + waterfront * landValue, data=saratoga_train)
 rmse(lm_better, saratoga_test)
 
 ##### 
