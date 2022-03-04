@@ -1,12 +1,3 @@
-
-
-
-saratoga_split = initial_split(SaratogaHouses, prop = 0.8)
-saratoga_train = training(saratoga_split)
-saratoga_test = testing(saratoga_split)
-
-
-
 library(tidyverse)
 library(ggplot2)
 library(modelr)
