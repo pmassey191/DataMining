@@ -87,10 +87,16 @@ saratoga_scaled <- scale(saratoga_matrix, center = FALSE, scale = apply(saratoga
 
 saratoga_folds2 = crossv_kfold(saratoga_scaled, k=K_folds)
 
-for (i in K_folds) {
-  train[1,i] = saratoga_folds2$train$'[1,i]' %>%  
-    as.data.frame() 
+foreach(i = 1:K_folds) %do% {
+  nam <- paste("train_", i, sep="")
+  saratoga_matrix = model.matrix(~ . - 1, data=nam)
+  nam <- scale(saratoga_matrix, center = FALSE, scale = apply(saratoga_matrix, 2, sd)) %>% 
+    as.data.frame() %>% 
+    rename(heatinghot_air = "heatinghot air") %>% 
+    rename(heatinghot_water_steam = "heatinghot water/steam")
+  assign(nam, as.data.frame(saratoga_folds$train[i]))
 }
+  
 
 i = 1
 train = saratoga_folds2[1,i] %>%  
