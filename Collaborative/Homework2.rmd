@@ -47,10 +47,10 @@ ggplot(fpanel)+
   xlab("Hour of the Day")+
   labs(title= "Boardings by Day of Week, Month, and Hour of Day",
        color = 'Month',
-       caption = str_wrap(capt,60))
+       caption = str_wrap(capt,60)) +
+  theme(plot.caption = element_text(hjust = 0))
 ```
 
-"The charts generally show that weekdays follow the same pattern of growing boardings throughout the day until a peak around rush hour. The hour of peak boarding tends to stay the same for weekdays, coming in the evening rush hour. However, weekends have a very different ridership profile that is pretty much flat throughout the day. We see that on Mondays in September, ridership is lower, this could stem from Labor Day skewing our average ridership on Mondays in September. Similarly, we also see that later week ridership is lower in November, which could stem from Thanksgiving Break being on Wednesday, Thursday, and Friday in November."
 
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 capt2 = "In the figure, we see that ridership is consistently lower on weekends. The early mornig hours tend to have lower ridership with boardings tending to increase throughout the day until the evening. Holding hour of day and weekend/weekday fixed, the temperature does not seem to have much of an impact on boardings. Most likely people are taking the bus for class or work and thus temperature does not change the fact that people still need to get to campus or to their job. "
@@ -62,7 +62,8 @@ ggplot(capmetro_UT)+
   ylab("Boardings")+
   labs(title = "Boardings by Weekday/Weekend and Temperature faceted by Hour of Day",
        color = "Weekend",
-       caption = str_wrap(capt2, 60))
+       caption = str_wrap(capt2, 60)) +
+  theme(plot.caption = element_text(hjust = 0))
 ```
 
 
@@ -320,7 +321,7 @@ rmse_large <- rmse(model_large,hotels_test)
 ```
 
 
-We start off by creating a small model which uses market_segment, adults, customer_type, and is_repeated_guest as explanatory variables. We also create a large linear model which includes all variables in our dataset excluding the arrival date. To generate the best possible linear model we utilize the lasso model on all variables and interactions. To measure the out of sample performance of our lasso model, we use the RMSE. For the small, large and lasso models the RMSE's are `r rmse_small`,`r rmse_large`,`r rmse_lasso` respectively. We can see that the lasso model beats the two other models.
+We start off by creating a small model which uses `market_segment`, `adults`, `customer_type`, and `is_repeated_guest` as explanatory variables. We also create a large linear model which includes all variables in our dataset excluding the arrival date. To generate the best possible linear model we utilize the lasso model on all variables and interactions. To measure the out of sample performance of our lasso model, we use the RMSE. For the small, large and lasso models the RMSE's are `r rmse_small`, `r rmse_large`, `r rmse_lasso` respectively. We can see that the lasso model beats the two other models.
 
 
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}

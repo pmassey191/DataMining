@@ -2,17 +2,6 @@
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-2-1.png)
 
-“The charts generally show that weekdays follow the same pattern of
-growing boardings throughout the day until a peak around rush hour. The
-hour of peak boarding tends to stay the same for weekdays, coming in the
-evening rush hour. However, weekends have a very different ridership
-profile that is pretty much flat throughout the day. We see that on
-Mondays in September, ridership is lower, this could stem from Labor Day
-skewing our average ridership on Mondays in September. Similarly, we
-also see that later week ridership is lower in November, which could
-stem from Thanksgiving Break being on Wednesday, Thursday, and Friday in
-November.”
-
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
 ## Problem 2
@@ -37,7 +26,7 @@ the data set in a linear regression. It includes the variables lot size,
 age, living area, bedrooms, fireplaces, bathrooms, rooms, heating
 method, fuel method, and central air. This model performed consistently
 the worst. In this iteration, for example, it achieved an average
-out-of-sample mean-squared error of 66294.
+out-of-sample mean-squared error of 66107.
 
 This is to be expected. Economic intuition indicates that we are likely
 omitting important considerations for house prices, notably land value,
@@ -45,7 +34,7 @@ waterfront access and whether or not it is a new construction. We add
 these to our linear model to improve it, as well as an interaction term
 for lot size and waterfront access.<sup>2</sup> Indeed, we see
 significant improvement in the RMSE. In this iteration, we see a
-mean-squared error of 58666.
+mean-squared error of 58646.
 
 Finally, we attempt to create a KNN model. To begin, we include all
 possible covariates and attempt to identify the value of K neighbors
@@ -54,7 +43,7 @@ the error on the vertical access and the value of K on the horizontal.
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
-The minimum RMSE<sup>3</sup> can be found at k=9 with a RMSE of 61758.
+The minimum RMSE<sup>3</sup> can be found at k=6 with a RMSE of 61507.
 Consistently, across many iterations of train/test splits, the KNN model
 had lower mean-squared errors than our baseline medium model but failed
 to beat the better linear model. It appears that the data available to
@@ -111,14 +100,14 @@ credit history have a low risk of default.
 
 ## Problem 4
 
-We start off by creating a small model which uses market\_segment,
-adults, customer\_type, and is\_repeated\_guest as explanatory
+We start off by creating a small model which uses `market_segment`,
+`adults`, `customer_type`, and `is_repeated_guest` as explanatory
 variables. We also create a large linear model which includes all
 variables in our dataset excluding the arrival date. To generate the
 best possible linear model we utilize the lasso model on all variables
 and interactions. To measure the out of sample performance of our lasso
 model, we use the RMSE. For the small, large and lasso models the RMSE’s
-are 0.2672,0.2413,0.2264 respectively. We can see that the lasso model
+are 0.2653, 0.2349, 0.2162 respectively. We can see that the lasso model
 beats the two other models.
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-8-1.png)![](Homework2_files/figure-markdown_strict/unnamed-chunk-8-2.png)
