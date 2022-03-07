@@ -6,6 +6,7 @@ output: md_document
 ---
 
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+options(scipen=999, digits = 0)
 library(tidyverse)
 library(mosaic)
 library(rsample)
@@ -65,6 +66,188 @@ ggplot(capmetro_UT)+
 
 ## Problem 2
 
+We consider three models for predicting the sale price of a house for tax authority purposes. In order to assess the predictive power of each, we conduct a "horse race" to determine who has the best predictive ability when compared to a withheld testing set of the data by evaluating root mean squared error (RMSE); generally, the lower the RMSE the better. The three models are:
+
+
+  * Simple linear model (our medium benchmark model)
+  * Linear model with additional features and an interaction term
+  * K-Nearest Neighbor (KNN) regression
+  
+For all three models, we use a train/test split of the data: the training data set is used to build the model and the testing set is used to evaluate the model's performance.^1^
+
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
+## Load in the data and generate our folds for cross validation
+
+data(SaratogaHouses)
+
+K_folds = 10                                           # folds, 10 standard
+k_grid = c(2:30,35,40,45,50,55,60,65,70,80,90,100)     # what values of K in KNN to check
+
+saratoga_folds = crossv_kfold(SaratogaHouses, k=K_folds)
+
+## Create a for loop to generate scaled data based on randomized training set
+
+training <- foreach (i = 1:K_folds) %do% {
+  
+  # call each training set "train" with an index and then convert it to a matrix
+  
+  train_name <- paste("train_", i, sep = "") 
+  train = as.data.frame(saratoga_folds$train[i])         
+  train_mtx = model.matrix(~ . - 1, data=train)          
+  
+  # create our scale using only the training data
+  
+  scale_train = apply(train_mtx[,2:20], 2, sd)  # calculate std dev for each column
+  
+  # scale the training data using std dev of the training data
+  
+  scaled_train = scale(train_mtx[,2:20], scale = scale_train) %>% 
+    as.data.frame()
+
+  # this automatically removes price (because we don't want to scale it)
+  # so we add it back in
+  
+  scaled_train = scaled_train %>%
+    mutate(price = train_mtx[,1])
+  
+  # assign the name we created at the beginning  
+  # drop prefixes and spaces in column names
+
+  colnames(scaled_train) <- sub(".*\\.", "", colnames(scaled_train))
+  names(scaled_train) <- str_replace_all(names(scaled_train), c(" " = "." , "/" = "." ))
+  
+  assign(train_name, scaled_train)
+
+}
+
+testing <- foreach (i = 1:K_folds) %do% {
+  
+  # repeat the same process for testing
+  
+  test_name <- paste("test_", i, sep = "")
+  test = as.data.frame(saratoga_folds$test[i])
+  test_mtx = model.matrix(~ . - 1, data=test) 
+  
+  # scale the testing data using std dev of the training data
+  
+  scaled_test = scale(test_mtx[,2:20], scale = scale_train) %>% 
+    as.data.frame()
+  
+  # add price column back
+  
+  scaled_test = scaled_test %>%
+    mutate(price = test_mtx[,1])
+  
+  # assign the name we created at the beginning  
+  # drop prefixes and spaces in column names
+  
+  colnames(scaled_test) <- sub(".*\\.", "", colnames(scaled_test))
+  names(scaled_test) <- str_replace_all(names(scaled_test), c(" " = "." , "/" = "." ))
+  
+  assign(test_name, scaled_test)
+  
+}
+
+# We now have k-fold testing and training splits
+
+# We can apply these to both KNN and the linear models
+
+#####
+# Medium model
+#####
+
+# baseline medium model with 11 main effects
+
+baseline_rmse = foreach(i = 1:K_folds, .combine='rbind') %dopar% {
+  
+  # pull each fold and clean up
+  
+  test = as.data.frame(saratoga_folds$test[i])
+  train = as.data.frame(saratoga_folds$train[i])
+  colnames(test) <- sub(".*\\.", "", colnames(test)) 
+  colnames(train) <- sub(".*\\.", "", colnames(train)) 
+
+  # calculate rmse across all folds
+  
+  lm_baseline = lm(price ~ . - pctCollege - sewer - waterfront - landValue - newConstruction, data=train)
+  rmse(lm_baseline, test)
+}
+
+avg_rmse_baseline <- mean(baseline_rmse)
+
+#####
+# Better linear model
+#####
+
+better_rmse = foreach(i = 1:K_folds, .combine='rbind') %dopar% {
+  
+  # pull each fold and clean up
+  
+  test = as.data.frame(saratoga_folds$test[i])
+  train = as.data.frame(saratoga_folds$train[i])
+  
+  colnames(test) <- sub(".*\\.", "", colnames(test)) 
+  colnames(train) <- sub(".*\\.", "", colnames(train)) 
+  
+  # calculate rmse across all folds
+    
+  lm_better = lm(price ~ . - pctCollege - sewer - heating + lotSize * waterfront, data=train)
+  rmse(lm_better, test)
+}
+
+avg_rmse_better <- mean(better_rmse)
+
+```
+
+Consider first the baseline model. This model uses 11 main effects from the data set in a linear regression. It includes the variables lot size, age, living area, bedrooms, fireplaces, bathrooms, rooms, heating method, fuel method, and central air. This model performed consistently the worst. In this iteration, for example, it achieved an average out-of-sample mean-squared error of `r avg_rmse_baseline`.
+
+This is to be expected. Economic intuition indicates that we are likely omitting important considerations for house prices, notably land value, waterfront access and whether or not it is a new construction. We add these to our linear model to improve it, as well as an interaction term for lot size and waterfront access.^2^ Indeed, we see significant improvement in the RMSE. In this iteration, we see a mean-squared error of `r avg_rmse_better`.
+
+Finally, we attempt to create a KNN model. To begin, we include all possible covariates and attempt to identify the value of K neighbors that gives us the lowest mean-squared error. The following graph shows the error on the vertical access and the value of K on the horizontal.
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
+#####
+# KNN
+#####
+
+# Calculate RMSE over folds for each value of k
+
+cv_grid = foreach(k = k_grid, .combine='rbind') %dopar% {
+  
+  models = map(training, ~ knnreg(price ~ lotSize + age +landValue + livingArea +pctCollege + bedrooms + fireplaces + bathrooms + rooms + heatinghot.water.steam + heatinghot.water.steam + heatingelectric + fuelelectric + centralAirNo + fueloil + sewerpublic.commercial + sewernone + waterfrontNo + newConstructionNo, k=k, data = ., use.all=FALSE))
+  
+  errs = map2_dbl(models, testing, modelr::rmse)
+  c(k=k, err = mean(errs), sd = sd(errs), std_err = sd(errs)/sqrt(K_folds))
+  
+} %>% as.data.frame
+
+# Plot the results
+
+ggplot(cv_grid) + 
+  geom_point(aes(x=k, y=err)) + 
+  geom_errorbar(aes(x=k, ymin = err-std_err, ymax = err+std_err)) + 
+  scale_x_log10() +
+  ylab("Mean-Squared Error")
+
+opt_k = cv_grid%>%
+  arrange(err)
+min_k = opt_k[1,1]
+min_rmse = opt_k[1,2]
+```
+
+
+The minimum RMSE^3^ can be found at k=`r min_k` with a RMSE of `r min_rmse`. Consistently, across many iterations of train/test splits, the KNN model had lower mean-squared errors than our baseline medium model but failed to beat the better linear model. It appears that the data available to us is better suited to the linear model we identified above. It is possible the KNN model is over-fitting to the data and therefore inducing higher RMSEs. We would therefore suggest pursuing a tax policy that uses the improved linear model we proposed above. 
+
+
+### Footnotes
+^1^ In order to account for random variation in the data depending on how we split it, we use k-fold cross-validation which takes k number (in this case, k=10) train/test splits and allows us to examine the average error over each split.
+
+^2^ The complete model is `price` regressed on `lotSize`, `age`, `landValue`, `livingArea`, `bedrooms`, `fireplaces`, `bathrooms`, `room`, `fuel`, and an interaction term of `waterfront` * `lotSize`.
+
+^3^ In order to truly compare lowest RMSE, we opt for choosing the K that corresponds to the lowest RMSE, instead of choosing the highest K within one standard error of the minimum (1SE method), which could be argued for in this context. 
 
 
 ## Problem 3
