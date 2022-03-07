@@ -1,0 +1,88 @@
+---
+title: "Homework 2"
+author: "Patrick Massey, Harrison Snell, Brandon Williams"
+date: "3/7/2022"
+output: md_document
+---
+
+```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+library(tidyverse)
+library(mosaic)
+library(rsample)
+library(caret)
+library(modelr)
+library(parallel)
+library(foreach)
+library(gamlr)
+```
+
+## Problem 1
+```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
+capmetro_UT <- read.csv("~/School/University of Texas-Austin/Classes/Data Mining/Data/capmetro_UT.csv")
+
+# Recode the categorical variables in sensible, rather than alphabetical, order
+capmetro_UT = mutate(capmetro_UT,
+                     day_of_week = factor(day_of_week,
+                                          levels=c("Mon", "Tue", "Wed","Thu", "Fri", "Sat", "Sun")),
+                     month = factor(month,
+                                    levels=c("Sep", "Oct","Nov")))
+
+fpanel = capmetro_UT %>%
+  group_by(hour_of_day,day_of_week,month)%>%
+  summarize(avg_board = mean(boarding))
+
+ggplot(fpanel)+
+  geom_line(aes(x=hour_of_day,y=avg_board,color=month),size=1.2)+
+  facet_wrap(~day_of_week)+
+  theme_minimal()
+  
+
+ggplot(capmetro_UT)+
+  geom_point(aes(x=temperature,y=boarding,color=weekend),size=.5)+
+  facet_wrap(~hour_of_day)
+
+
+```
+
+
+## Problem 2
+
+
+
+## Problem 3
+```{r}
+german_credit <- read.csv("~/School/University of Texas-Austin/Classes/Data Mining/Data/german_credit.csv")
+
+prob_default = german_credit%>% 
+  group_by(history) %>% 
+  summarize(prob = mean(Default))
+
+ggplot(prob_default)+
+  geom_col(aes(x=history,y=prob),color='dark green',fill='dark green')+
+  theme_minimal()+
+  ggtitle("Probability of Default \n by Credit History")+
+  ylab("Probability")+
+  xlab("History")
+
+german_split = initial_split(german_credit, prop = 0.8)
+german_train = training(german_split)
+german_test = testing(german_split)
+
+
+logit_credit = glm(Default ~ (duration + amount + installment + age + 
+                     history + purpose + foreign)^2, data=german_train,
+                   family='binomial')
+
+# Confusion Matrix
+phat_logit_credit = predict(logit_credit,german_test,
+                            type='response')
+yhat_logit_credit = ifelse(phat_logit_credit >0.5 , 1 , 0)
+confusion_logit = table(y = german_test$Default ,
+                        yhat = yhat_logit_credit)
+
+
+```
+
+
+## Problem 4

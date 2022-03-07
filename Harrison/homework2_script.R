@@ -26,8 +26,10 @@ fpanel = capmetro_UT %>%
   summarize(avg_board = mean(boarding))
 
 ggplot(fpanel)+
-  geom_line(aes(x=hour_of_day,y=avg_board,color=month))+
-  facet_wrap(~day_of_week)
+  geom_line(aes(x=hour_of_day,y=avg_board,color=month),size=1.2)+
+  facet_wrap(~day_of_week)+
+  theme_minimal()
+  
 
 ggplot(capmetro_UT)+
   geom_point(aes(x=temperature,y=boarding,color=weekend),size=.5)+
@@ -68,7 +70,7 @@ house_scale_train = training(house_scale_split)
 house_scale_test = testing(house_scale_split)
 
 
-knn_K5 = caret::knn3(price ~ . - pctCollege - dum_new_cons, data=house_scale_train, k=5)
+knn_K5 = caret::knn3(price ~ . - pctCollege - dum_new_cons, data=house_scale_train, subset = ifelse(),k=5)
 knn_K25 = caret::knn3(price ~ . - pctCollege - dum_new_cons, data=house_scale_train, k=25)
 
 rmse(knn_K25, data=house_scale_test)-rmse(knn_K5,data=house_scale_test)
@@ -83,14 +85,19 @@ prob_default = german_credit%>%
   summarize(prob = mean(Default))
 
 ggplot(prob_default)+
-  geom_col(aes(x=history,y=prob))
+  geom_col(aes(x=history,y=prob),color='dark green',fill='dark green')+
+  theme_minimal()+
+  ggtitle("Probability of Default \n by Credit History")+
+  ylab("Probability")+
+  xlab("History")
 
 german_split = initial_split(german_credit, prop = 0.8)
 german_train = training(german_split)
 german_test = testing(german_split)
 
-logit_credit = glm(Default ~ duration + amount + installment + age + 
-                     history + purpose + foreign, data=german_test,
+
+logit_credit = glm(Default ~ (duration + amount + installment + age + 
+                     history + purpose + foreign)^2, data=german_train,
                    family='binomial')
 
 # Confusion Matrix
