@@ -27,7 +27,7 @@ the data set in a linear regression. It includes the variables lot size,
 age, living area, bedrooms, fireplaces, bathrooms, rooms, heating
 method, fuel method, and central air. This model performed consistently
 the worst. In this iteration, for example, it achieved an average
-out-of-sample mean-squared error of $66162.
+out-of-sample mean-squared error of $66634.
 
 This is to be expected. Economic intuition indicates that we are likely
 omitting important considerations for house prices, notably land value,
@@ -35,7 +35,7 @@ waterfront access and whether or not it is a new construction. We add
 these to our linear model to improve it, as well as an interaction term
 for lot size and waterfront access.<sup>2</sup> Indeed, we see
 significant improvement in the RMSE. In this iteration, we see a
-mean-squared error of $58291.
+mean-squared error of $58583.
 
 Finally, we attempt to create a KNN model. To begin, we include all
 possible covariates and attempt to identify the value of K neighbors
@@ -44,7 +44,7 @@ the error on the vertical access and the value of K on the horizontal.
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
-The minimum RMSE<sup>3</sup> can be found at k=7 with a RMSE of $61178.
+The minimum RMSE<sup>3</sup> can be found at k=12 with a RMSE of $62078.
 Consistently, across many iterations of train/test splits, the KNN model
 had lower mean-squared errors than our baseline medium model but failed
 to beat the better linear model. It appears that the data available to
@@ -58,7 +58,9 @@ that uses the improved linear model we proposed above.
 <sup>1</sup> In order to account for random variation in the data
 depending on how we split it, we use k-fold cross-validation which takes
 k number (in this case, k=10) train/test splits and allows us to examine
-the average error over each split.
+the average error over each split. All data is standardized so that KNN
+can appropriately measure distance based on standard deviation rather
+than the arbitrary units of the covariates.
 
 <sup>2</sup> The complete model is `price` regressed on `lotSize`,
 `age`, `landValue`, `livingArea`, `bedrooms`, `fireplaces`, `bathrooms`,
@@ -83,8 +85,8 @@ credit. In predicting default with the logit model, exponentiating our
 coefficients correspond to odds of defaults, *e*<sup>*λ*</sup>. In
 looking at the history variable, “terrible” and “poor” both have about a
 -3 coefficient. This implies that having a terrible or poor credit
-history decreases the odds of default by about $\\frac{1}{e^\\lambda}$.
-This means that good history actually increases the odds of default, an
+history decreases the odds of default by about *e*<sup>−3</sup>. This
+means that good history actually increases the odds of default, an
 outcome of the flawed data collection. With the problems in the good
 credit history, the data is not adequate for a predictive model of
 defaults. Consider two identical people with only credit history
@@ -108,7 +110,7 @@ variables in our dataset excluding the arrival date. To generate the
 best possible linear model we utilize the lasso model on all variables
 and interactions. To measure the out of sample performance of our lasso
 model, we use the RMSE. For the small, large and lasso models the RMSE’s
-are 0.2671, 0.2413, 0.2269 respectively. We can see that the lasso model
+are 0.2665, 0.2416, 0.2257 respectively. We can see that the lasso model
 beats the two other models.
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-8-1.png)![](Homework2_files/figure-markdown_strict/unnamed-chunk-8-2.png)
