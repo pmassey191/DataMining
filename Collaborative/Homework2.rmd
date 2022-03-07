@@ -50,6 +50,8 @@ ggplot(fpanel)+
        caption = str_wrap(capt,60))
 ```
 
+"The charts generally show that weekdays follow the same pattern of growing boardings throughout the day until a peak around rush hour. The hour of peak boarding tends to stay the same for weekdays, coming in the evening rush hour. However, weekends have a very different ridership profile that is pretty much flat throughout the day. We see that on Mondays in September, ridership is lower, this could stem from Labor Day skewing our average ridership on Mondays in September. Similarly, we also see that later week ridership is lower in November, which could stem from Thanksgiving Break being on Wednesday, Thursday, and Friday in November."
+
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 capt2 = "In the figure, we see that ridership is consistently lower on weekends. The early mornig hours tend to have lower ridership with boardings tending to increase throughout the day until the evening. Holding hour of day and weekend/weekday fixed, the temperature does not seem to have much of an impact on boardings. Most likely people are taking the bus for class or work and thus temperature does not change the fact that people still need to get to campus or to their job. "
 
@@ -283,10 +285,13 @@ confusion_logit = table(y = german_test$Default ,
 
 
 ```
+
+
 Looking at the bar plot of default probability, we see that the highest risk of default falls with those who have "good" credit histories. This is a surprise. We would expect that those with good credit history would pay back their loans, but this points to the problem with the sampling method used. By using retrospective sampling, the bank has collected a sample that overstates the probability of default for those with good credit. In predicting default with the logit model, exponentiating our coefficients correspond to odds of defaults, $e^\lambda$. In looking at the history variable, "terrible" and "poor" both have about a -3 coefficient. This implies that having a terrible or poor credit history decreases the odds of default by about $\frac{1}{e^\lambda}$. This means that good history actually increases the odds of default, an outcome of the flawed data collection. With the problems in the good credit history, the data is not adequate for a predictive model of defaults. Consider two identical people with only credit history differing, our model would say that the person with good credit history is more likely to default and thus a riskier loan. Our experience tells us that this is wrong, we would expect the person with good credit history to be more likely to pay back their loan. Since our predictive model would be poor using this retrospective sampling approach, it would be better to use a random sample of loans. Though we will see a lot of loans that are not defaulted on, it will be better to have a random sample of data to create a predictive model. That way, we have a model that matches our intuition, importantly on the fact that those with good credit history have a low risk of default.
 
 ## Problem 4
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+options(scipen=999, digits = 4)
 hotels_dev = read.csv(here('Data/hotels_dev.csv')) %>% mutate(arrival_date = ymd(arrival_date)) %>% select(-reserved_room_type)
 hotels_val = read.csv(here('Data/hotels_val.csv'))%>% mutate(arrival_date = ymd(arrival_date)) %>%  select(-reserved_room_type)
 
@@ -313,7 +318,11 @@ rmse_lasso <- sqrt(sum((y_hat_lasso - hotel_y_test)^2)/nrow(hotels_test))
 rmse_small <- rmse(model_small,hotels_test)
 rmse_large <- rmse(model_large,hotels_test)
 ```
+
+
 We start off by creating a small model which uses market_segment, adults, customer_type, and is_repeated_guest as explanatory variables. We also create a large linear model which includes all variables in our dataset excluding the arrival date. To generate the best possible linear model we utilize the lasso model on all variables and interactions. To measure the out of sample performance of our lasso model, we use the RMSE. For the small, large and lasso models the RMSE's are `r rmse_small`,`r rmse_large`,`r rmse_lasso` respectively. We can see that the lasso model beats the two other models.
+
+
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 phat_test_model_small = predict(model_small, hotels_val, type='response')
 phat_test_model_large = predict(model_large, hotels_val, type='response')
