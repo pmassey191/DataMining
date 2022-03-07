@@ -1,3 +1,7 @@
+# Homework 2
+
+Patrick Massey, Harrison Snell, Brandon Williams
+
 ## Problem 1
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-2-1.png)
@@ -27,7 +31,7 @@ the data set in a linear regression. It includes the variables lot size,
 age, living area, bedrooms, fireplaces, bathrooms, rooms, heating
 method, fuel method, and central air. This model performed consistently
 the worst. In this iteration, for example, it achieved an average
-out-of-sample mean-squared error of $66634.
+out-of-sample mean-squared error of $65949.
 
 This is to be expected. Economic intuition indicates that we are likely
 omitting important considerations for house prices, notably land value,
@@ -35,7 +39,7 @@ waterfront access and whether or not it is a new construction. We add
 these to our linear model to improve it, as well as an interaction term
 for lot size and waterfront access.<sup>2</sup> Indeed, we see
 significant improvement in the RMSE. In this iteration, we see a
-mean-squared error of $58583.
+mean-squared error of $58267.
 
 Finally, we attempt to create a KNN model. To begin, we include all
 possible covariates and attempt to identify the value of K neighbors
@@ -44,7 +48,7 @@ the error on the vertical access and the value of K on the horizontal.
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
-The minimum RMSE<sup>3</sup> can be found at k=12 with a RMSE of $62078.
+The minimum RMSE<sup>3</sup> can be found at k=8 with a RMSE of $61880.
 Consistently, across many iterations of train/test splits, the KNN model
 had lower mean-squared errors than our baseline medium model but failed
 to beat the better linear model. It appears that the data available to
@@ -110,7 +114,7 @@ variables in our dataset excluding the arrival date. To generate the
 best possible linear model we utilize the lasso model on all variables
 and interactions. To measure the out of sample performance of our lasso
 model, we use the RMSE. For the small, large and lasso models the RMSE’s
-are 0.2665, 0.2416, 0.2257 respectively. We can see that the lasso model
+are 0.2765, 0.2484, 0.2335 respectively. We can see that the lasso model
 beats the two other models.
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-8-1.png)![](Homework2_files/figure-markdown_strict/unnamed-chunk-8-2.png)

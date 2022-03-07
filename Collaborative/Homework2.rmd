@@ -19,6 +19,9 @@ library(here)
 library(stringr)
 library(lubridate)
 ```
+# Homework 2
+
+Patrick Massey, Harrison Snell, Brandon Williams
 
 ## Problem 1
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
