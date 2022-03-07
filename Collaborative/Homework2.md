@@ -1,15 +1,12 @@
-Problem 1
----------
+## Problem 1
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-2-1.png)
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
-Problem 2
----------
+## Problem 2
 
-Problem 3
----------
+## Problem 3
 
 ![](Homework2_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 Looking at the bar plot of default probability, we see that the highest
@@ -38,5 +35,15 @@ sample of data to create a predictive model. That way, we have a model
 that matches our intuition, importantly on the fact that those with good
 credit history have a low risk of default.
 
-Problem 4
----------
+## Problem 4
+
+We start off by creating a small model which uses market\_segment,
+adults, customer\_type, and is\_repeated\_guest as explanatory
+variables. We also create a large linear model which includes all
+variables in our dataset excluding the arrival date. To generate the
+best possible linear model we utilize the lasso model on all variables
+and interactions. To measure the out of sample performance of our lasso
+model, we use the RMSE. For the small, large and lasso models the RMSE’s
+are 0.269292,0.2451936,0.2312441 respectively. We can see that the lasso
+model beats the two other models.
+![](Homework2_files/figure-markdown_strict/unnamed-chunk-6-1.png)![](Homework2_files/figure-markdown_strict/unnamed-chunk-6-2.png)
