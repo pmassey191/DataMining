@@ -14,12 +14,13 @@ library(modelr)
 library(parallel)
 library(foreach)
 library(gamlr)
+library(here)
 ```
 
 ## Problem 1
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 
-capmetro_UT <- read.csv("~/School/University of Texas-Austin/Classes/Data Mining/Data/capmetro_UT.csv")
+capmetro_UT <- read.csv(here("Data/capmetro_UT.csv"))
 
 # Recode the categorical variables in sensible, rather than alphabetical, order
 capmetro_UT = mutate(capmetro_UT,
@@ -35,14 +36,20 @@ fpanel = capmetro_UT %>%
 ggplot(fpanel)+
   geom_line(aes(x=hour_of_day,y=avg_board,color=month),size=1.2)+
   facet_wrap(~day_of_week)+
-  theme_minimal()
-  
+  theme_minimal()+
+  ylab("Average Boarding")+
+  xlab("Hour of the Day")+
+  labs(title= "Boardings by Day of Week, Month, and Hour of Day",color = 'Month')
+```
 
+```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 ggplot(capmetro_UT)+
   geom_point(aes(x=temperature,y=boarding,color=weekend),size=.5)+
-  facet_wrap(~hour_of_day)
-
-
+  facet_wrap(~hour_of_day)+
+  xlab("Temperature")+
+  ylab("Boardings")+
+  labs(title = "Boardings by Weekday/Weekend and Temperature faceted by Hour of Day",
+       color = "Weekend")
 ```
 
 
@@ -51,8 +58,8 @@ ggplot(capmetro_UT)+
 
 
 ## Problem 3
-```{r}
-german_credit <- read.csv("~/School/University of Texas-Austin/Classes/Data Mining/Data/german_credit.csv")
+```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+german_credit <- read.csv(here("Data/german_credit.csv"))
 
 prob_default = german_credit%>% 
   group_by(history) %>% 
@@ -62,8 +69,8 @@ ggplot(prob_default)+
   geom_col(aes(x=history,y=prob),color='dark green',fill='dark green')+
   theme_minimal()+
   ggtitle("Probability of Default \n by Credit History")+
-  ylab("Probability")+
-  xlab("History")
+  ylab("Probability of Default")+
+  xlab("Credit History")
 
 german_split = initial_split(german_credit, prop = 0.8)
 german_train = training(german_split)

@@ -28,12 +28,19 @@ fpanel = capmetro_UT %>%
 ggplot(fpanel)+
   geom_line(aes(x=hour_of_day,y=avg_board,color=month),size=1.2)+
   facet_wrap(~day_of_week)+
-  theme_minimal()
+  theme_minimal()+
+  ylab("Average Boarding")+
+  xlab("Hour of the Day")+
+  labs(title= "Boardings by Day of Week, Month, and Hour of Day",color = 'Month')
   
 
 ggplot(capmetro_UT)+
   geom_point(aes(x=temperature,y=boarding,color=weekend),size=.5)+
-  facet_wrap(~hour_of_day)
+  facet_wrap(~hour_of_day)+
+  xlab("Temperature")+
+  ylab("Boardings")+
+  labs(title = "Boardings by Hour of Day, Weekday/Weekend, and Temperature",
+       color = "Weekend")
 
 
 
