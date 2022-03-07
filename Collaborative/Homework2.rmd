@@ -102,3 +102,87 @@ confusion_logit = table(y = german_test$Default ,
 Looking at the bar plot of default probability, we see that the highest risk of default falls with those who have "good" credit histories. This is a surprise. We would expect that those with good credit history would pay back their loans, but this points to the problem with the sampling method used. By using retrospective sampling, the bank has collected a sample that overstates the probability of default for those with good credit. In predicting default with the logit model, exponentiating our coefficients correspond to odds of defaults, $e^\lambda$. In looking at the history variable, "terrible" and "poor" both have about a -3 coefficient. This implies that having a terrible or poor credit history decreases the odds of default by about $\frac{1}{e^\lambda}$. This means that good history actually increases the odds of default, an outcome of the flawed data collection. With the problems in the good credit history, the data is not adequate for a predictive model of defaults. Consider two identical people with only credit history differing, our model would say that the person with good credit history is more likely to default and thus a riskier loan. Our experience tells us that this is wrong, we would expect the person with good credit history to be more likely to pay back their loan. Since our predictive model would be poor using this retrospective sampling approach, it would be better to use a random sample of loans. Though we will see a lot of loans that are not defaulted on, it will be better to have a random sample of data to create a predictive model. That way, we have a model that matches our intuition, importantly on the fact that those with good credit history have a low risk of default.
 
 ## Problem 4
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+hotels_dev = read.csv(here('Data/hotels_dev.csv')) %>% mutate(arrival_date = ymd(arrival_date)) %>% select(-reserved_room_type)
+hotels_val = read.csv(here('Data/hotels_val.csv'))%>% mutate(arrival_date = ymd(arrival_date)) %>%  select(-reserved_room_type)
+
+#Train-Test Split
+hotels_split <- initial_split(hotels_dev,.8)
+hotels_train <- training(hotels_split)
+hotels_test <- testing(hotels_split)
+
+model_small <- lm(children ~ market_segment + adults + customer_type + 
+                    is_repeated_guest, data = hotels_train)
+model_large <- lm(children ~ . - arrival_date, data = hotels_train)
+
+#creating train and test model matrix for lasso
+hotel_x_train = model.matrix(children ~ (.-1 - arrival_date+month(arrival_date))^2, data=hotels_train) # 
+hotel_y_train = hotels_train$children
+hotel_x_test = model.matrix(children ~ (.-1 - arrival_date+month(arrival_date))^2, data=hotels_test)
+hotel_y_test = hotels_test$children
+hotel_val_x = model.matrix(children ~ (.-1 - arrival_date+month(arrival_date))^2, data=hotels_val)
+
+hotel_lasso = gamlr(hotel_x_train, hotel_y_train, family="binomial", type = 'response')
+y_hat_lasso <- predict(hotel_lasso, newdata = hotel_x_test, type = 'response') %>% as.matrix() %>% as.data.frame()
+
+rmse_lasso <- sqrt(sum((y_hat_lasso - hotel_y_test)^2)/nrow(hotels_test))
+rmse_small <- rmse(model_small,hotels_test)
+rmse_large <- rmse(model_large,hotels_test)
+```
+We start off by creating a small model which uses market_segment, adults, customer_type, and is_repeated_guest as explanatory variables. We also create a large linear model which includes all variables in our dataset excluding the arrival date. To generate the best possible linear model we utilize the lasso model on all variables and interactions. To measure the out of sample performance of our lasso model, we use the RMSE. For the small, large and lasso models the RMSE's are `r rmse_small`,`r rmse_large`,`r rmse_lasso` respectively. We can see that the lasso model beats the two other models.
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+phat_test_model_small = predict(model_small, hotels_val, type='response')
+phat_test_model_large = predict(model_large, hotels_val, type='response')
+phat_test_model_good = predict(hotel_lasso, newdata = hotel_val_x, type='response')
+thresh_grid = seq(1, 0, by=-0.005)
+
+roc_curve_hotel = foreach(thresh = thresh_grid, .combine='rbind') %do% {
+  yhat_test_model_small = ifelse(phat_test_model_small >= thresh, 1, 0)
+  yhat_test_model_large = ifelse(phat_test_model_large >= thresh, 1, 0)
+  yhat_test_model_good = ifelse(phat_test_model_good >= thresh, 1, 0)
+  confusion_out_model_small = as.matrix(confusionMatrix(data = as.factor(yhat_test_model_small),reference = as.factor(as.matrix(hotels_val$children))))
+  confusion_out_model_large = as.matrix(confusionMatrix(data = as.factor(yhat_test_model_large),reference = as.factor(as.matrix(hotels_val$children))))
+  confusion_out_model_good =  as.matrix(confusionMatrix(data = as.factor(yhat_test_model_good),reference = as.factor(as.matrix(hotels_val$children))))
+  out_model_small = data.frame(model = "Small Linear Model",
+                               TPR = confusion_out_model_small[2,2]/sum(hotels_val$children==1),
+                               FPR = confusion_out_model_small[2,1]/sum(hotels_val$children==0))
+  out_model_large = data.frame(model = "Large Linear Model",
+                               TPR = confusion_out_model_large[2,2]/sum(hotels_val$children==1),
+                               FPR = confusion_out_model_large[2,1]/sum(hotels_val$children==0))
+  out_model_good = data.frame(model = "Lasso Linear Model",
+                              TPR = confusion_out_model_good[2,2]/sum(hotels_val$children==1),
+                              FPR = confusion_out_model_good[2,1]/sum(hotels_val$children==0))
+  rbind(out_model_small, out_model_large,out_model_good)
+} %>% as.data.frame()
+
+ggplot(roc_curve_hotel) + 
+  geom_line(aes(x=FPR, y=TPR, color=model)) + 
+  labs(title="ROC Curves") +
+  theme_minimal()
+
+K_folds = 20
+
+hotels_val <- hotels_val %>% 
+  mutate(fold_id = rep(1:K_folds, length=nrow(hotels_val)) %>% sample,
+y_hat = predict(hotel_lasso, newdata = hotel_val_x,type = 'response'))
+
+compare <- hotels_val %>% 
+  group_by(fold_id) %>% 
+  summarise(
+    pred = sum(y_hat),
+    actual = sum(children)
+  )
+
+ggplot(compare, aes(x = actual, y=pred))+
+  geom_point()+
+  geom_abline(slope = 1, intercept = 0)+
+  scale_x_continuous(limits = c(12,30))+
+  scale_y_continuous(limits = c(12,30))+
+  labs(title = "Predicted vs Observed Number of Children",
+       caption = "The line represents what a perfect fit would be between
+       predicted and observed number of children. We see an 
+       upward trend which indicates the model is performing adequetly.")+
+  xlab("Observed Number of Children")+
+  ylab("Predicted Number of Children")+
+  theme_minimal()
+```
