@@ -25,6 +25,10 @@ fpanel = capmetro_UT %>%
   group_by(hour_of_day,day_of_week,month)%>%
   summarize(avg_board = mean(boarding))
 
+testing = capmetro_UT %>%
+  group_by(month,day_of_week)%>%
+  summarize(mean(temperature))
+
 ggplot(fpanel)+
   geom_line(aes(x=hour_of_day,y=avg_board,color=month),size=1.2)+
   facet_wrap(~day_of_week)+
