@@ -1,0 +1,159 @@
+---
+title: "Homework 3"
+author: "Patrick Massey, Harrison Snell, Brandon Williams"
+date: "4/6/2022"
+output: md_document
+---
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
+library(tidyverse)
+library(mosaic)
+library(rsample)
+library(caret)
+library(modelr)
+library(parallel)
+library(foreach)
+library(gamlr)
+library(here)
+library(stringr)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+library(gbm)
+library(pdp)
+library(here)
+```
+
+# Homework 3
+
+
+## Problem 1
+
+1.	The problem with a simple regression of "crime" on "police" is that crime is endogenous in police. That is, more crime might directly cause more police (a particularly high crime area gets more police, instead of the reverse, undermining any element of causality). Therefore, we can’t so easily identify the effect of policing on crime. 
+2.	The researchers used a unique element of Washington, DC, where extra police are mandated by the national “terror alert” system. On high alert days, more police are automatically put on the street. Therefore, police presence is not a function of “street” crime and is entirely determined by exogenously. The results indicate that extra police presence as a result of high alert is associated with a decrease in crime when police presence is determined by something other than the local crime level. 
+3.	Ridership controls for a decrease in crime caused by fewer people (fewer tourists on a given day, for example) in the area because they are concerned about a high terrorism alert. In other words, this provides a check on the hypothesis that the decrease in crime is related to the increased police presence, and not a decrease in civilian and criminal activity directly related to concerns about terrorism.
+4.	This model appears to be modeling the interaction between the high alert variable and the various police districts of DC, while controlling for metro ridership. The results indicate that midday ridership is associated with an increase in crime, and that high alert status in the first police district is associated with a decrease in crime. However, this effect seems to disappear in the other districts (not district 1), and the coefficient on the interaction variable in any other district is not statistically distinguishable from zero. It is likely this was included because it allows the researchers to look where police concentration is largest (the first district) while holding other confounders constant (such as weather, increases in tourism, etc.) that should effect the districts similarly. 
+
+
+## Problem 2
+
+We are using log cases. 
+
+Let's take a look at our CART. 
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
+dengue <- read_csv(here("data/dengue.csv"))
+
+# To avoid errors in partial plot, we need to clean the data a bit, and also convert to log cases.
+
+dengue <- dengue %>% 
+  mutate(log_cases = log(total_cases+1)) %>% 
+  as.data.frame() %>% 
+  na.omit()
+
+dengue$season = as.factor(dengue$season)
+dengue$city = as.factor(dengue$city)
+
+# let's split our data into training and testing sets
+
+set.seed(1833)
+dengue_split =  initial_split(dengue, prop=0.8)
+set.seed(1833)
+dengue_train = training(dengue_split)
+set.seed(1833)
+dengue_test  = testing(dengue_split)
+
+## A tree with default control
+
+dengue.tree = rpart(log_cases ~ city + season + precipitation_amt + avg_temp_k + air_temp_k + dew_point_temp_k + max_air_temp_k + min_air_temp_k + precip_amt_kg_per_m2 + relative_humidity_percent + specific_humidity + tdtr_k, 
+                    data=dengue_train,
+                    control = rpart.control(cp = .005, minsplit = 30))
+
+
+# Let's prune our tree at the 1se level
+
+prune_1se = function(my_tree) {
+  out = as.data.frame(my_tree$cptable)
+  thresh = min(out$xerror + out$xstd)
+  cp_opt = max(out$CP[out$xerror <= thresh])
+  prune(my_tree, cp=cp_opt)
+}
+
+dengue.tree_prune = prune_1se(dengue.tree)
+
+rpart.plot(dengue.tree, type=4, extra=1)
+
+
+```
+
+It looks a bit complicated. What if we use the 1SE rule to prune the tree back?
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+rpart.plot(dengue.tree_prune, type=4, extra=1)
+
+```
+Much more parsimonious. Our first split comes  from Average Diurnal Temperature Range (DTR), and then our splits come from season and specific humidity. 
+
+Let's consider a random forest instead.
+
+This is a graph that shows MSE as a function of the number of trees used in the random forest. It levels out before reaching 100 trees. 
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
+# Random Forest
+
+dengue.forest = randomForest(log_cases ~ city + season + precipitation_amt + avg_temp_k + air_temp_k + dew_point_temp_k + max_air_temp_k + min_air_temp_k + precip_amt_kg_per_m2 + relative_humidity_percent + specific_humidity + tdtr_k,
+                             data=dengue_train, importance = TRUE, na.action=na.omit)
+
+# shows out-of-bag MSE as a function of the number of trees used
+plot(dengue.forest)
+
+modelr::rmse(dengue.tree_prune, dengue_test)
+modelr::rmse(dengue.forest, dengue_test)
+
+```
+Let's compare RMSEs to see how we are doing. The pruned tree has an RMSE of .9372, while the random forest has an RMSE of .8824, a marked improvement (recall that our predictions are in log form).
+
+What abotu variable important? Is there anything that could be ignored from the random forest without noticeable improvement?
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+# variable importance measures
+vi = varImpPlot(dengue.forest, type=1)
+
+
+```
+
+Precipitation amount has the lowest variable importance, probably because it is partially captured by pricipitation per square meter, but it is also not irrelevant. 
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
+boost = gbm(log_cases ~ city + season + precipitation_amt + avg_temp_k + air_temp_k + dew_point_temp_k + max_air_temp_k + min_air_temp_k + precip_amt_kg_per_m2 + relative_humidity_percent + specific_humidity + tdtr_k,
+             data=dengue_train,
+             interaction.depth=4, n.trees=10000, shrinkage=.001)
+
+
+# Look at error curve
+gbm.perf(boost)
+
+# RMSE comparison
+modelr::rmse(dengue.tree, dengue_test)
+modelr::rmse(dengue.tree_prune, dengue_test)
+modelr::rmse(dengue.forest, dengue_test)
+modelr::rmse(boost, dengue_test)
+
+
+```
+Comparing RMSEs, the random forest does jsut slightly better than the boosted model. 
+
+Let's look at partial dependence plots.
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+# Partial plots
+
+partialPlot(dengue.forest, dengue_test, 'specific_humidity', las=1)
+partialPlot(dengue.forest, dengue_test, 'precipitation_amt', las=1)
+partialPlot(dengue.forest, dengue_test, 'tdtr_k', las=1)
+```
+
