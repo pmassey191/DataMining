@@ -84,6 +84,56 @@ the different tuning parameters, we create a for-loop that runs through
 a number of interaction depth, shrinkage, and number of tree variables.
 Seeing the lowest RMSE value allows us to set the parameters as optimal.
 
+    # create hyperparameter grid
+    hyper_grid <- expand.grid(
+      shrinkage = c(.001, .003, .005, .008, .01),
+      interaction.depth = c(3, 4, 5, 6, 7),
+      optimal_trees = 0,               # a place to dump results
+      min_RMSE = 0                     # a place to dump results
+    )
+
+    # total number of combinations
+    ## [1] 25
+
+    for(i in 1:nrow(hyper_grid)) {
+
+      # reproducibility
+      set.seed(1833)
+
+      # train model
+      dengue.tune <- gbm(
+        formula = log_cases ~ city + season + precipitation_amt + avg_temp_k + air_temp_k + dew_point_temp_k + max_air_temp_k + min_air_temp_k + precip_amt_kg_per_m2 + relative_humidity_percent + specific_humidity + tdtr_k,
+        distribution = "gaussian",
+        data = dengue_train,
+        n.trees = 10000,
+        interaction.depth = hyper_grid$interaction.depth[i],
+        shrinkage = hyper_grid$shrinkage[i],
+        train.fraction = .75,
+        n.cores = NULL, # will use all cores by default
+        verbose = FALSE
+      )
+
+      # add min training error and trees to grid
+      hyper_grid$optimal_trees[i] <- which.min(dengue.tune$valid.error)
+      hyper_grid$min_RMSE[i] <- sqrt(min(dengue.tune$valid.error))
+    }
+
+    hyper_grid %>%
+      dplyr::arrange(min_RMSE) %>%
+      head(10)
+
+    ##    shrinkage interaction.depth optimal_trees  min_RMSE
+    ## 1      0.010                 4           460 0.9576874
+    ## 2      0.010                 5           411 0.9598106
+    ## 3      0.010                 3           438 0.9611258
+    ## 4      0.008                 4           465 0.9611482
+    ## 5      0.003                 5          1159 0.9612847
+    ## 6      0.003                 4          1344 0.9612945
+    ## 7      0.008                 5           462 0.9613949
+    ## 8      0.005                 4           693 0.9614216
+    ## 9      0.001                 4          4928 0.9615875
+    ## 10     0.005                 5           693 0.9619146
+
 Let’s set the shrinkage to .01 and the interaction depth to 4. Trees
 will be set to 500 since it converged around the mid-400s.
 

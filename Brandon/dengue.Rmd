@@ -133,7 +133,7 @@ Precipitation amount has the lowest variable importance, probably because it is 
 
 Finally, let's consider a gradient boosted tree. To compare different the different tuning parameters, we create a for-loop that runs through a number of interaction depth, shrinkage, and number of tree variables. Seeing the lowest RMSE value allows us to set the parameters as optimal. 
 
-``` {r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+``` {r}
 
 # create hyperparameter grid
 hyper_grid <- expand.grid(
