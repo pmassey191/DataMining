@@ -54,9 +54,11 @@ Let’s begin by taking a look at our CART.
 We are already starting to lose some interpretability. What if we use
 the 1SE rule to prune the tree back?
 
-![](dengue_files/figure-markdown_strict/unnamed-chunk-4-1.png) Much more
-parsimonious. Our first split comes from Average Diurnal Temperature
-Range (DTR), and then our splits come from season and specific humidity.
+![](dengue_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+
+Much more parsimonious. Our first split comes from Average Diurnal
+Temperature Range (DTR), and then our splits come from season and
+specific humidity.
 
 Let’s consider a random forest instead. Here you can see MSE as a
 function of the number of trees used in the random forest. It levels out
@@ -105,8 +107,10 @@ boosted model.
 
     ## Using 500 trees...
 
-    ## [1] 0.876312
+    ## [1] 0.8753748
 
-Let’s look at partial dependence plots.
+Let’s look at partial dependence plots from the boosted tree. We include
+`specific_humidity` and `precipitation_amt`, as well as `tdtr_k` since
+it played an important role in the first tree we looked at.
 
 ![](dengue_files/figure-markdown_strict/unnamed-chunk-11-1.png)![](dengue_files/figure-markdown_strict/unnamed-chunk-11-2.png)![](dengue_files/figure-markdown_strict/unnamed-chunk-11-3.png)

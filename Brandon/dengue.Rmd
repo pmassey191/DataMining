@@ -202,8 +202,9 @@ Let's look at partial dependence plots from the boosted tree. We include `specif
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 # Partial plots
 
-partialPlot(dengue.boost, dengue_test, 'specific_humidity', las=1)
-partialPlot(dengue.boost, dengue_test, 'precipitation_amt', las=1)
-partialPlot(dengue.boost, dengue_test, 'tdtr_k', las=1)
+plot(dengue.boost, 'specific_humidity')
+plot(dengue.boost, 'precipitation_amt')
+plot(dengue.boost, 'tdtr_k')
+
 ```
 
