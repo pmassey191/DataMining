@@ -133,7 +133,7 @@ Precipitation amount has the lowest variable importance, probably because it is 
 
 Finally, let's consider a gradient boosted tree. To compare different the different tuning parameters, we create a for-loop that runs through a number of interaction depth, shrinkage, and number of tree variables. Seeing the lowest RMSE value allows us to set the parameters as optimal. 
 
-``` {r}
+``` {r include=FALSE}
 
 # create hyperparameter grid
 hyper_grid <- expand.grid(
@@ -172,6 +172,14 @@ for(i in 1:nrow(hyper_grid)) {
 hyper_grid %>%
   dplyr::arrange(min_RMSE) %>%
   head(10)
+```
+
+``` {r}
+hyper_grid %>%
+  dplyr::arrange(min_RMSE) %>%
+  head(10)
+```
+
 ```
 
 Let's set the shrinkage to .01 and the interaction depth to 4. Trees will be set to 500 since it converged around the mid-400s. 
