@@ -97,6 +97,7 @@ dengue.tree_prune = prune_1se(dengue.tree)
 rpart.plot(dengue.tree_prune, type=4, extra=1)
 
 ```
+
 Much more parsimonious. Our first split comes from Average Diurnal Temperature Range (DTR), and then our splits come from season and specific humidity. 
 
 Let's consider a random forest instead. Here you can see MSE as a function of the number of trees used in the random forest. It levels out before reaching 100 trees, so we aren't gaining that much after that. 
@@ -196,7 +197,7 @@ modelr::rmse(dengue.boost, dengue_test)
 ```
 
 
-Let's look at partial dependence plots.
+Let's look at partial dependence plots. We include `specific_humidity` and `precipitation_amt`, as well as `tdtr_k` since it played an important role in the first tree we looked at. 
 
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 # Partial plots
