@@ -194,16 +194,21 @@ dengue.boost = gbm(log_cases ~ city + season + precipitation_amt + avg_temp_k + 
 ```
 Comparing RMSEs, the random forest does just slightly better than the boosted model. 
 
-``` {r}
+``` {r include = FALSE}
 
 # RMSE comparison
-modelr::rmse(dengue.tree, dengue_test)
-modelr::rmse(dengue.tree_prune, dengue_test)
-modelr::rmse(dengue.forest, dengue_test)
-modelr::rmse(dengue.boost, dengue_test)
+x = modelr::rmse(dengue.tree, dengue_test)
+x2 = modelr::rmse(dengue.tree_prune, dengue_test)
+y = modelr::rmse(dengue.forest, dengue_test)
+z = modelr::rmse(dengue.boost, dengue_test)
 
 ```
 
+| Model       | RMSE        |
+| ----------- | ----------- |
+| CART        | 'r x'       |
+| Forest      | 'r y'       |
+| Boosted     | 'r z'       |
 
 Let's look at partial dependence plots from the boosted tree. We include `specific_humidity` and `precipitation_amt`, as well as `tdtr_k` since it played an important role in the first tree we looked at. 
 
