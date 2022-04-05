@@ -136,42 +136,42 @@ Finally, let's consider a gradient boosted tree. To compare different the differ
 ``` {r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 
 # create hyperparameter grid
-hyper_grid <- expand.grid(
-  shrinkage = c(.001, .003, .005, .008, .01),
-  interaction.depth = c(3, 4, 5, 6, 7),
-  optimal_trees = 0,               # a place to dump results
-  min_RMSE = 0                     # a place to dump results
-)
-
-# total number of combinations
-## [1] 25
-
-for(i in 1:nrow(hyper_grid)) {
-
-  # reproducibility
-  set.seed(1833)
-
-  # train model
-  dengue.tune <- gbm(
-    formula = log_cases ~ city + season + precipitation_amt + avg_temp_k + air_temp_k + dew_point_temp_k + max_air_temp_k + min_air_temp_k + precip_amt_kg_per_m2 + relative_humidity_percent + specific_humidity + tdtr_k,
-    distribution = "gaussian",
-    data = dengue_train,
-    n.trees = 10000,
-    interaction.depth = hyper_grid$interaction.depth[i],
-    shrinkage = hyper_grid$shrinkage[i],
-    train.fraction = .75,
-    n.cores = NULL, # will use all cores by default
-    verbose = FALSE
-  )
-
-  # add min training error and trees to grid
-  hyper_grid$optimal_trees[i] <- which.min(dengue.tune$valid.error)
-  hyper_grid$min_RMSE[i] <- sqrt(min(dengue.tune$valid.error))
-}
-
-hyper_grid %>%
-  dplyr::arrange(min_RMSE) %>%
-  head(10)
+# hyper_grid <- expand.grid(
+#   shrinkage = c(.001, .003, .005, .008, .01),
+#   interaction.depth = c(3, 4, 5, 6, 7),
+#   optimal_trees = 0,               # a place to dump results
+#   min_RMSE = 0                     # a place to dump results
+# )
+# 
+# # total number of combinations
+# ## [1] 25
+# 
+# for(i in 1:nrow(hyper_grid)) {
+# 
+#   # reproducibility
+#   set.seed(1833)
+# 
+#   # train model
+#   dengue.tune <- gbm(
+#     formula = log_cases ~ city + season + precipitation_amt + avg_temp_k + air_temp_k + dew_point_temp_k + max_air_temp_k + min_air_temp_k + precip_amt_kg_per_m2 + relative_humidity_percent + specific_humidity + tdtr_k,
+#     distribution = "gaussian",
+#     data = dengue_train,
+#     n.trees = 10000,
+#     interaction.depth = hyper_grid$interaction.depth[i],
+#     shrinkage = hyper_grid$shrinkage[i],
+#     train.fraction = .75,
+#     n.cores = NULL, # will use all cores by default
+#     verbose = FALSE
+#   )
+# 
+#   # add min training error and trees to grid
+#   hyper_grid$optimal_trees[i] <- which.min(dengue.tune$valid.error)
+#   hyper_grid$min_RMSE[i] <- sqrt(min(dengue.tune$valid.error))
+# }
+# 
+# hyper_grid %>%
+#   dplyr::arrange(min_RMSE) %>%
+#   head(10)
 ```
 
 Let's set the shrinkage to .01 and the interaction depth to 4. Trees will be set to 500 since it converged around the mid-400s. 
@@ -202,7 +202,7 @@ Let's look at partial dependence plots from the boosted tree. We include `specif
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 # Partial plots
 
-partialPlot(dengue.boost, dengue_test, 'specific_humidity', las=1)
+partialPlot(dengue.forest, dengue_test, 'specific_humidity', las=1)
 partialPlot(dengue.boost, dengue_test, 'precipitation_amt', las=1)
 partialPlot(dengue.boost, dengue_test, 'tdtr_k', las=1)
 ```
