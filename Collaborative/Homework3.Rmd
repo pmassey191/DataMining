@@ -382,7 +382,7 @@ boost_errs = map2_dbl(boost_models, ca_boost_folds$test, modelr::rmse)
 boost_errs = mean(boost_errs)
 ```
 
-We can see that the best model from each category has an out-of-sample error based on their own train-test splits. For example, we have an average RMSE from the linear model of `linear_errs` or an average RMSE of `boost_errs` from the boosted model. However, these RMSE's are from train-test splits built from the original train-test split. In order to compare RMSE's across model categories, we return to our first train-test split to recover RMSE's and determine the best predictive model.
+We can see that the best model from each category has an out-of-sample error based on their own train-test splits. For example, we have an average RMSE from the linear model of `r linear_errs` or an average RMSE of `r boost_errs` from the boosted model. However, these RMSE's are from train-test splits built from the original train-test split. In order to compare RMSE's across model categories, we return to our first train-test split to recover RMSE's and determine the best predictive model.
 
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 #### Comparing to full train-test split
@@ -428,7 +428,7 @@ final_boost = gbm(medianHouseValue ~ . - totalRooms - totalBedrooms,
 boost_rmse = rmse(final_boost, ca_test)
 ```
 
-Comparing out-of-sample errors across models, we see that the boosting model and the random forest perform quite similarly, with RMSE's of `boost_rmse` and `forest_rmse` respectively. This is compared to something like the linear model which yields `linear_rmse` and we see that both the boosting and random forets are considerable improvements. The CART and KNN models fall somewhere in between and we include their RMSE values for completness, CART has an RMSE of `cart_rmse` and KNN yields `knn_rmse`. Finally, we will move forward with the boosting as the best predictive model and create our plots.
+Comparing out-of-sample errors across models, we see that the boosting model and the random forest perform quite similarly, with RMSE's of `r boost_rmse` and `r forest_rmse` respectively. This is compared to something like the linear model which yields `r linear_rmse` and we see that both the boosting and random forests are considerable improvements. The CART and KNN models fall somewhere in between and we include their RMSE values for completeness, CART has an RMSE of `r cart_rmse` and KNN yields `r knn_rmse`. Finally, we will move forward with the boosting as the best predictive model and create our plots.
 
 
 

@@ -251,8 +251,8 @@ iterations of different models.
 
 We can see that the best model from each category has an out-of-sample
 error based on their own train-test splits. For example, we have an
-average RMSE from the linear model of `linear_errs` or an average RMSE
-of `boost_errs` from the boosted model. However, these RMSE’s are from
+average RMSE from the linear model of 6.9988704^{4} or an average RMSE
+of 5.0280866^{4} from the boosted model. However, these RMSE’s are from
 train-test splits built from the original train-test split. In order to
 compare RMSE’s across model categories, we return to our first
 train-test split to recover RMSE’s and determine the best predictive
@@ -260,12 +260,12 @@ model.
 
 Comparing out-of-sample errors across models, we see that the boosting
 model and the random forest perform quite similarly, with RMSE’s of
-`boost_rmse` and `forest_rmse` respectively. This is compared to
-something like the linear model which yields `linear_rmse` and we see
-that both the boosting and random forets are considerable improvements.
+4.9681589^{4} and 5.0201254^{4} respectively. This is compared to
+something like the linear model which yields 6.8181319^{4} and we see
+that both the boosting and random forests are considerable improvements.
 The CART and KNN models fall somewhere in between and we include their
-RMSE values for completness, CART has an RMSE of `cart_rmse` and KNN
-yields `knn_rmse`. Finally, we will move forward with the boosting as
+RMSE values for completeness, CART has an RMSE of 6.1524436^{4} and KNN
+yields 6.6844869^{4}. Finally, we will move forward with the boosting as
 the best predictive model and create our plots.
 
 ![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-1.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-2.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-3.png)
