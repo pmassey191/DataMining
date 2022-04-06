@@ -69,7 +69,7 @@ before reaching 100 trees, so we aren’t gaining that much after that.
 ![](Homework3_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 Let’s compare RMSEs to see how we are doing. The pruned tree has an RMSE
-of .9372, while the random forest has an RMSE of .8767, a marked
+of 0.9372846, while the random forest has an RMSE of 0.8774907, a marked
 improvement (recall that our predictions are in log form).
 
 What about variable importance? Is there anything that could be ignored
@@ -85,6 +85,10 @@ Finally, let’s consider a gradient boosted tree. To compare different
 the different tuning parameters, we create a for-loop that runs through
 a number of interaction depth, shrinkage, and number of tree variables.
 Seeing the lowest RMSE value allows us to set the parameters as optimal.
+
+    hyper_grid %>%
+      dplyr::arrange(min_RMSE) %>%
+      head(10)
 
 This gives us a good indication of where to tune our parameters. Let’s
 set the shrinkage to .01 and the interaction depth to 4. Trees will be

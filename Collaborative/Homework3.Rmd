@@ -117,11 +117,11 @@ plot(dengue.forest)
 
 ```
 ``` {r include=FALSE}
-modelr::rmse(dengue.tree_prune, dengue_test)
-modelr::rmse(dengue.forest, dengue_test)
+x = modelr::rmse(dengue.tree_prune, dengue_test)
+y = modelr::rmse(dengue.forest, dengue_test)
 ```
 
-Let's compare RMSEs to see how we are doing. The pruned tree has an RMSE of .9372, while the random forest has an RMSE of .8767, a marked improvement (recall that our predictions are in log form).
+Let's compare RMSEs to see how we are doing. The pruned tree has an RMSE of `r x`, while the random forest has an RMSE of `r y`, a marked improvement (recall that our predictions are in log form).
 
 What about variable importance? Is there anything that could be ignored from the random forest without noticeable improvement?
 
@@ -173,7 +173,7 @@ for(i in 1:nrow(hyper_grid)) {
 }
 ```
 
-``` {r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+``` {r results=FALSE,warning=FALSE,message=FALSE}
 hyper_grid %>%
   dplyr::arrange(min_RMSE) %>%
   head(10)
