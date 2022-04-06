@@ -69,8 +69,8 @@ before reaching 100 trees, so we aren’t gaining that much after that.
 ![](Homework3_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 Let’s compare RMSEs to see how we are doing. The pruned tree has an RMSE
-of 0.9372846, while the random forest has an RMSE of 0.8774907, a marked
-improvement (recall that our predictions are in log form).
+of 1, while the random forest has an RMSE of 1, a marked improvement
+(recall that our predictions are in log form).
 
 What about variable importance? Is there anything that could be ignored
 from the random forest without noticeable improvement?
@@ -90,17 +90,17 @@ Seeing the lowest RMSE value allows us to set the parameters as optimal.
       dplyr::arrange(min_RMSE) %>%
       head(10)
 
-    ##    shrinkage interaction.depth optimal_trees  min_RMSE
-    ## 1      0.010                 4           460 0.9576874
-    ## 2      0.010                 5           411 0.9598106
-    ## 3      0.010                 3           438 0.9611258
-    ## 4      0.008                 4           465 0.9611482
-    ## 5      0.003                 5          1159 0.9612847
-    ## 6      0.003                 4          1344 0.9612945
-    ## 7      0.008                 5           462 0.9613949
-    ## 8      0.005                 4           693 0.9614216
-    ## 9      0.001                 4          4928 0.9615875
-    ## 10     0.005                 5           693 0.9619146
+    ##    shrinkage interaction.depth optimal_trees min_RMSE
+    ## 1          0                 4           460        1
+    ## 2          0                 5           411        1
+    ## 3          0                 3           438        1
+    ## 4          0                 4           465        1
+    ## 5          0                 5          1159        1
+    ## 6          0                 4          1344        1
+    ## 7          0                 5           462        1
+    ## 8          0                 4           693        1
+    ## 9          0                 4          4928        1
+    ## 10         0                 5           693        1
 
 This gives us a good indication of where to tune our parameters. Let’s
 set the shrinkage to .01 and the interaction depth to 4. Trees will be
@@ -119,15 +119,15 @@ boosted model.
 <tbody>
 <tr class="odd">
 <td>CART</td>
-<td>0.920833</td>
+<td>1</td>
 </tr>
 <tr class="even">
 <td>Forest</td>
-<td>0.8774907</td>
+<td>1</td>
 </tr>
 <tr class="odd">
 <td>Boosted</td>
-<td>0.8753748</td>
+<td>1</td>
 </tr>
 </tbody>
 </table>
@@ -196,19 +196,19 @@ performance of our models is shown below.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Linear</td>
-<td style="text-align: right;">9.601229</td>
+<td style="text-align: right;">10</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">CART</td>
-<td style="text-align: right;">8.861500</td>
+<td style="text-align: right;">9</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Pruned Tree</td>
-<td style="text-align: right;">9.312698</td>
+<td style="text-align: right;">9</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Random Forest</td>
-<td style="text-align: right;">6.869059</td>
+<td style="text-align: right;">7</td>
 </tr>
 </tbody>
 </table>
@@ -232,10 +232,10 @@ green rating by creating a partial dependence plot shown below.
 From the plot we can see that there is a small marginal improvement in
 the expected revenue for a green building versus a non-green building.
 In fact going from a non-green building to a green building will give a
-revenue increase of 0.7526676 which in percentage terms leads to a
-3.117% increase in revenue. This is not a large increase in revenue for
-transitioning to a green certified building but it is large enough that
-it should be considered when making the decision.
+revenue increase of 1 which in percentage terms leads to a 3% increase
+in revenue. This is not a large increase in revenue for transitioning to
+a green certified building but it is large enough that it should be
+considered when making the decision.
 
 ## Problem 4 - California Housing
 
@@ -251,21 +251,20 @@ iterations of different models.
 
 We can see that the best model from each category has an out-of-sample
 error based on their own train-test splits. For example, we have an
-average RMSE from the linear model of 6.9988704^{4} or an average RMSE
-of 5.0280866^{4} from the boosted model. However, these RMSE’s are from
-train-test splits built from the original train-test split. In order to
-compare RMSE’s across model categories, we return to our first
-train-test split to recover RMSE’s and determine the best predictive
-model.
+average RMSE from the linear model of 69989 or an average RMSE of 50281
+from the boosted model. However, these RMSE’s are from train-test splits
+built from the original train-test split. In order to compare RMSE’s
+across model categories, we return to our first train-test split to
+recover RMSE’s and determine the best predictive model.
 
 Comparing out-of-sample errors across models, we see that the boosting
 model and the random forest perform quite similarly, with RMSE’s of
-4.9681589^{4} and 5.0201254^{4} respectively. This is compared to
-something like the linear model which yields 6.8181319^{4} and we see
-that both the boosting and random forests are considerable improvements.
-The CART and KNN models fall somewhere in between and we include their
-RMSE values for completeness, CART has an RMSE of 6.1524436^{4} and KNN
-yields 6.6844869^{4}. Finally, we will move forward with the boosting as
-the best predictive model and create our plots.
+49682 and 50201 respectively. This is compared to something like the
+linear model which yields 68181 and we see that both the boosting and
+random forests are considerable improvements. The CART and KNN models
+fall somewhere in between and we include their RMSE values for
+completeness, CART has an RMSE of 61524 and KNN yields 66845. Finally,
+we will move forward with the boosting as the best predictive model and
+create our plots.
 
 ![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-1.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-2.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-3.png)
