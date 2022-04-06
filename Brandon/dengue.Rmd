@@ -206,9 +206,9 @@ z = modelr::rmse(dengue.boost, dengue_test)
 
 | Model       | RMSE        |
 | ----------- | ----------- |
-| CART        | 'r x'       |
-| Forest      | 'r y'       |
-| Boosted     | 'r z'       |
+| CART        | `r x`       |
+| Forest      | `r y`       |
+| Boosted     | `r z`       |
 
 Let's look at partial dependence plots from the boosted tree. We include `specific_humidity` and `precipitation_amt`, as well as `tdtr_k` since it played an important role in the first tree we looked at. 
 
