@@ -6,7 +6,7 @@ output: md_document
 ---
 
 ```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
-options(scipen=999, digits = 0)
+options(scipen=999)
 library(tidyverse)
 library(mosaic)
 library(rsample)
