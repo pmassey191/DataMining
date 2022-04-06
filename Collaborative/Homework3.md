@@ -142,26 +142,27 @@ it played an important role in the first tree we looked at.
 
 Before developing any models we first begin by performing some feature
 engineering. The first feature we engineer is the outcome variable of
-interest revenue which represents the revenue per square foot per
+interest `revenue` which represents the revenue per square foot per
 calendar year. In order to create this feature we first scale down
-leasing\_rate to a percentage by dividing by 100, and then multiplying
-that by the rent. We also create a new feature called utility\_cost
-which is the sum of gas and electricity costs for rents that are quoted
-on a net contract basis. The purpose of this new feature is to capture
-the costs associated with a rental offered on a net contract basis. We
-then create a training set and a testing set with a split of 80/20. This
+`leasing_rate` to a percentage by dividing by 100, and then multiplying
+that by `Rent`. We also create a new feature called `utility_cost` which
+is the sum of gas and electricity costs for rents that are quoted on a
+net contract basis. The purpose of this new feature is to capture the
+costs associated with a rental offered on a net contract basis. We then
+create a training set and a testing set with a split of 80/20. This
 gives us 6315 observations in our training set and 1579 observations in
 our testing set.
 
 To begin developing our model we start with a linear model using all
-features of the data set excluding, CS\_PropertyID, cluster,
-leasing\_rate, Rent, LEED, and Energystar. We remove CS\_PropertyID as
-it is just a unique building ID, and for similar reasons we remove
-cluster. We remove leasing\_rate and Rent since these variables directly
-calculate our outcome variable. Lastly we remove LEED and Energystar
-because we are only concerned if a building is green certified or not,
-and not what kind of green certification a building may have. We capture
-this with the green\_rating feature.
+features of the data set excluding, `CS_PropertyID`, `cluster`,
+`leasing_rate`, `Rent`, `LEED`, and `Energystar`. We remove
+`CS_PropertyID` as it is just a unique building ID, and for similar
+reasons we remove `cluster`. We remove `leasing_rate` and `Rent` since
+these variables directly calculate our outcome variable. Lastly we
+remove `LEED` and `Energystar` because we are only concerned if a
+building is green certified or not, and not what kind of green
+certification a building may have. We capture this with the
+`green_rating` feature.
 
 After getting a baseline model we then moved onto predicting using a
 tree model. The initial tree model generated, shown below, was extremely
@@ -223,9 +224,9 @@ used in our model.
 ![](Homework3_files/figure-markdown_strict/unnamed-chunk-19-1.png)
 
 We can see that from a prediction point of view the green rating of a
-building does provide a large (>10%) increase in RMSE performance. Now
-lets look at the dollar increase in revenue from a building that has a
-green rating by creating a partial dependence plot shown below.
+building does provide a large (&gt;10%) increase in RMSE performance.
+Now lets look at the dollar increase in revenue from a building that has
+a green rating by creating a partial dependence plot shown below.
 
 ![](Homework3_files/figure-markdown_strict/unnamed-chunk-20-1.png)
 
