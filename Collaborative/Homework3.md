@@ -1,5 +1,7 @@
 # Homework 3
 
+Patrick Massey, Harrison Snell, Brandon Williams
+
 ## Problem 1
 
 1.  The problem with a simple regression of “crime” on “police” is that
@@ -84,36 +86,43 @@ the different tuning parameters, we create a for-loop that runs through
 a number of interaction depth, shrinkage, and number of tree variables.
 Seeing the lowest RMSE value allows us to set the parameters as optimal.
 
-Let’s set the shrinkage to .01 and the interaction depth to 4. Trees
-will be set to 500 since it converged around the mid-400s.
+This gives us a good indication of where to tune our parameters. Let’s
+set the shrinkage to .01 and the interaction depth to 4. Trees will be
+set to 500 since it converged around the mid-400s.
 
 Comparing RMSEs, the random forest does just slightly better than the
 boosted model.
 
-    # RMSE comparison
-    modelr::rmse(dengue.tree, dengue_test)
-
-    ## [1] 0.920833
-
-    modelr::rmse(dengue.tree_prune, dengue_test)
-
-    ## [1] 0.9372846
-
-    modelr::rmse(dengue.forest, dengue_test)
-
-    ## [1] 0.8774907
-
-    modelr::rmse(dengue.boost, dengue_test)
-
-    ## Using 500 trees...
-
-    ## [1] 0.876312
+<table>
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CART</td>
+<td>0.920833</td>
+</tr>
+<tr class="even">
+<td>Forest</td>
+<td>0.8774907</td>
+</tr>
+<tr class="odd">
+<td>Boosted</td>
+<td>0.8753748</td>
+</tr>
+</tbody>
+</table>
 
 Let’s look at partial dependence plots from the boosted tree. We include
 `specific_humidity` and `precipitation_amt`, as well as `tdtr_k` since
 it played an important role in the first tree we looked at.
 
-\#\#Green Certification
+![](Homework3_files/figure-markdown_strict/unnamed-chunk-12-1.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-12-2.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-12-3.png)
+
+##Green Certification
 
 Before developing any models we first begin by performing some feature
 engineering. The first feature we engineer is the outcome variable of
@@ -143,20 +152,20 @@ tree model. The initial tree model generated, shown below, was extremely
 complex and not readable. This indicated that there might be some
 overfitting happening.
 
-![](Homework3_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](Homework3_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
 We then pruned our tree using the 1se method which generated the much
 simpler decision tree shown below. This tree sacrifices a marginal
 amount of performance for a much simpler tree.
 
-![](Homework3_files/figure-markdown_strict/unnamed-chunk-15-1.png)
+![](Homework3_files/figure-markdown_strict/unnamed-chunk-16-1.png)
 
 The visualization of the tree really highlighted the interactions that
 were not included in our baseline linear model. Naturally after seeing
 the performance of the tree as compared to the linear model we wanted to
 see if it could be improved upon using a random forest.
 
-![](Homework3_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+![](Homework3_files/figure-markdown_strict/unnamed-chunk-17-1.png)
 
 We see that our error really starts to bottom out around 100 trees. The
 performance of our models is shown below.
@@ -171,19 +180,19 @@ performance of our models is shown below.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Linear</td>
-<td style="text-align: right;">10.872515</td>
+<td style="text-align: right;">9.601229</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">CART</td>
-<td style="text-align: right;">9.967489</td>
+<td style="text-align: right;">8.861500</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Pruned Tree</td>
-<td style="text-align: right;">10.485920</td>
+<td style="text-align: right;">9.312698</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Random Forest</td>
-<td style="text-align: right;">8.025517</td>
+<td style="text-align: right;">6.869059</td>
 </tr>
 </tbody>
 </table>
@@ -195,17 +204,22 @@ Now that we have developed a model for predicting the revenue generated
 from an building we will look at the importance of the variables we have
 used in our model.
 
-![](Homework3_files/figure-markdown_strict/unnamed-chunk-18-1.png)
+![](Homework3_files/figure-markdown_strict/unnamed-chunk-19-1.png)
 
 We can see that from a prediction point of view the green rating of a
-building does provide a large (&gt;10%) increase in RMSE performance.
-Now lets look at the dollar increase in revenue from a building that has
-a green rating by creating a partial dependence plot shown below.
+building does provide a large (>10%) increase in RMSE performance. Now
+lets look at the dollar increase in revenue from a building that has a
+green rating by creating a partial dependence plot shown below.
 
-![](Homework3_files/figure-markdown_strict/unnamed-chunk-19-1.png)
+![](Homework3_files/figure-markdown_strict/unnamed-chunk-20-1.png)
 
 From the plot we can see that there is a small marginal improvement in
 the expected revenue for a green building versus a non-green building.
+In fact going from a non-green building to a green building will give a
+revenue increase of 0.7526676 which in percentage terms leads to a
+3.117% increase in revenue. This is not a large increase in revenue for
+transitioning to a green certified building but it is large enough that
+it should be considered when making the decision.
 
 ## California Housing
 
@@ -238,4 +252,4 @@ RMSE values for completness, CART has an RMSE of `cart_rmse` and KNN
 yields `knn_rmse`. Finally, we will move forward with the boosting as
 the best predictive model and create our plots.
 
-![](Homework3_files/figure-markdown_strict/unnamed-chunk-23-1.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-23-2.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-23-3.png)
+![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-1.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-2.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-24-3.png)
