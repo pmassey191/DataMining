@@ -203,12 +203,94 @@ Let's look at partial dependence plots from the boosted tree. We include `specif
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 # Partial plots
 
-partialPlot(dengue.forest, dengue_test, 'specific_humidity', las=1)
-partialPlot(dengue.boost, dengue_test, 'precipitation_amt', las=1)
-partialPlot(dengue.boost, dengue_test, 'tdtr_k', las=1)
+#partialPlot(dengue.forest, dengue_test, 'specific_humidity', las=1)
+#partialPlot(dengue.boost, dengue_test, 'precipitation_amt', las=1)
+#partialPlot(dengue.boost, dengue_test, 'tdtr_k', las=1)
+```
+
+##Green Certification
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+library(rsample) 
+library(randomForest)
+library(modelr)
+library(caret)
+library(gbm)
+library(knitr)
+greenbuildings <- read.csv("../data/greenbuildings.csv")%>%
+   mutate(revenue = Rent*(leasing_rate/100),
+           utility_cost = net*Gas_Costs + net*Electricity_Costs) %>%
+   select(-empl_gr)
+greenbuildings_split <- initial_split(greenbuildings,.8)
+greenbuildings_test <- testing(greenbuildings_split)
+greenbuildings_train <- training(greenbuildings_split)
+```
+
+Before developing any models we first begin by performing some feature engineering. The first feature we engineer is the outcome variable of interest revenue which represents the revenue per square foot per calendar year. In order to create this feature we first scale down leasing_rate to a percentage by dividing by 100, and then multiplying that by the rent. We also create a new feature called utility_cost which is the sum of gas and electricity costs for rents that are quoted on a net contract basis. The purpose of this new feature is to capture the costs associated with a rental offered on a net contract basis. We then create a training set and a testing set with a split of 80/20. This gives us 6315 observations in our training set and 1579 observations in our testing set.
+
+To begin developing our model we start with a linear model using all features of the data set excluding, CS_PropertyID, cluster, leasing_rate, Rent, LEED, and Energystar. We remove CS_PropertyID as it is just a unique building ID, and for similar reasons we remove cluster. We remove leasing_rate and Rent since these variables directly calculate our outcome variable. Lastly we remove LEED and Energystar because we are only concerned if a building is green certified or not, and not what kind of green certification a building may have. We capture this with the green_rating feature. 
+```{r, echo=FALSE, warning=FALSE }
+lm_base = lm(revenue ~ . - CS_PropertyID - cluster-leasing_rate-Rent-LEED-Energystar, data = greenbuildings_train)
 ```
 
 
+After getting a baseline model we then moved onto predicting using a tree model. The initial tree model generated, shown below, was extremely complex and not readable. This indicated that there might be some overfitting happening.
+
+```{r,echo=FALSE,warning=FALSE }
+gb_tree = rpart(revenue ~ . - CS_PropertyID - cluster-leasing_rate-Rent-LEED-Energystar,
+                  data=greenbuildings_train, control = rpart.control(cp = 0.0001,minsplit = 30))
+rpart.plot(gb_tree, digits=-5, type=4, extra=1)
+```
+
+ We then pruned our tree using the 1se method which generated the much simpler decision tree shown below. This tree sacrifices a marginal amount of performance for a much simpler tree.
+ 
+```{r,echo=FALSE,warning=FALSE }
+prune_1se = function(my_tree) {
+  out = as.data.frame(my_tree$cptable)
+  thresh = min(out$xerror + out$xstd)
+  cp_opt = max(out$CP[out$xerror <= thresh])
+  prune(my_tree, cp=cp_opt)
+}
+gb_tree_prune = prune_1se(gb_tree)
+rpart.plot(gb_tree_prune, digits=-5, type=4, extra=1)
+
+```
+
+The visualization of the tree really highlighted the interactions that were not included in our baseline linear model. Naturally after seeing the performance of the tree as compared to the linear model we wanted to see if it could be improved upon using a random forest.
+
+```{r, echo=FALSE,warning=FALSE}
+gb_forest = randomForest(revenue ~ . - CS_PropertyID - cluster-leasing_rate-Rent-LEED-Energystar,
+                           data=greenbuildings_train, importance = TRUE)
+plot(gb_forest)
+```
+
+We see that our error really starts to bottom out around 100 trees. The performance of our models is shown below.
+
+```{r,echo=FALSE,warning=FALSE }
+Model <- c("Linear", "CART", "Pruned Tree", "Random Forest")
+RMSE <- c(modelr::rmse(lm_base , greenbuildings_test), modelr::rmse(gb_tree, greenbuildings_test), modelr::rmse(gb_tree_prune, greenbuildings_test), modelr::rmse(gb_forest, greenbuildings_test))
+df <- data.frame(Model, RMSE)
+kable(df)
+```
+The random forest provides a significant reduction in RMSE as compared to our baseline linear model. 
+
+Now that we have developed a model for predicting the revenue generated from an building we will look at the importance of the variables we have used in our model.
+
+```{r, echo=FALSE,warning=FALSE }
+varImpPlot(gb_forest, main = "Variable Importance Plot")
+```
+
+We can see that from a prediction point of view the green rating of a building does provide a large (>10%) increase in RMSE performance. Now lets look at the dollar increase in revenue from a building that has a green rating by creating a partial dependence plot shown below.
+
+```{r, echo=FALSE,warning=FALSE }
+partialPlot(gb_forest, greenbuildings_test, 'green_rating', las=1)
+```
+
+From the plot we can see that there is a small marginal improvement in the expected revenue for a green building versus a non-green building. 
 
 
 
