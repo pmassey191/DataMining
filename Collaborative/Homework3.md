@@ -2,7 +2,7 @@
 
 Patrick Massey, Harrison Snell, Brandon Williams
 
-## Problem 1
+## Problem 1 - Police and Crime
 
 1.  The problem with a simple regression of “crime” on “police” is that
     crime is endogenous in police. That is, more crime might directly
@@ -40,7 +40,7 @@ Patrick Massey, Harrison Snell, Brandon Williams
     as weather, unrelated changes in tourism, etc.) that should effect
     the districts similarly.
 
-## Problem 2
+## Problem 2 - Dengue
 
 Our model will consider a prediction of log cases of dengue using CART,
 random forest, and boosted trees. Our model will consider `city`,
@@ -90,6 +90,18 @@ Seeing the lowest RMSE value allows us to set the parameters as optimal.
       dplyr::arrange(min_RMSE) %>%
       head(10)
 
+    ##    shrinkage interaction.depth optimal_trees  min_RMSE
+    ## 1      0.010                 4           460 0.9576874
+    ## 2      0.010                 5           411 0.9598106
+    ## 3      0.010                 3           438 0.9611258
+    ## 4      0.008                 4           465 0.9611482
+    ## 5      0.003                 5          1159 0.9612847
+    ## 6      0.003                 4          1344 0.9612945
+    ## 7      0.008                 5           462 0.9613949
+    ## 8      0.005                 4           693 0.9614216
+    ## 9      0.001                 4          4928 0.9615875
+    ## 10     0.005                 5           693 0.9619146
+
 This gives us a good indication of where to tune our parameters. Let’s
 set the shrinkage to .01 and the interaction depth to 4. Trees will be
 set to 500 since it converged around the mid-400s.
@@ -126,7 +138,7 @@ it played an important role in the first tree we looked at.
 
 ![](Homework3_files/figure-markdown_strict/unnamed-chunk-12-1.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-12-2.png)![](Homework3_files/figure-markdown_strict/unnamed-chunk-12-3.png)
 
-##Green Certification
+## Problem 3 - Green Housing
 
 Before developing any models we first begin by performing some feature
 engineering. The first feature we engineer is the outcome variable of
@@ -225,7 +237,7 @@ revenue increase of 0.7526676 which in percentage terms leads to a
 transitioning to a green certified building but it is large enough that
 it should be considered when making the decision.
 
-## California Housing
+## Problem 4 - California Housing
 
 The goal of this problem is to build the best possible model for
 predicting the median house value. We start by building the best

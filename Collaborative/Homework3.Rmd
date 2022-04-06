@@ -31,7 +31,7 @@ library(knitr)
 
 Patrick Massey, Harrison Snell, Brandon Williams
 
-## Problem 1
+## Problem 1 - Police and Crime
 
 1.	The problem with a simple regression of "crime" on "police" is that crime is endogenous in police. That is, more crime might directly cause more police (a particularly high crime area gets more police, instead of the reverse, undermining any element of causality). Therefore, we can’t so easily identify the effect of policing on crime. 
 2.	The researchers used a unique element of Washington, DC, where extra police are mandated by the national “terror alert” system. On high alert days, more police are automatically put on the street. Therefore, police presence is not a function of “street” crime and is entirely determined exogenously. The results indicate that extra police presence as a result of high alert is associated with a decrease in crime when police presence is determined by something other than the local crime level. This is useful evidence in the case for the deterrent effect of police on crime. 
@@ -39,7 +39,7 @@ Patrick Massey, Harrison Snell, Brandon Williams
 4.	This model appears to be modeling the interaction between the high alert variable and the various police districts of DC, while controlling for metro ridership. The results indicate that midday ridership is associated with an increase in crime, and that high alert status in the first police district is associated with a decrease in crime. However, this effect seems to lessen or disappear in the other districts (not district 1), and the coefficient on the interaction variable in any other district is not statistically distinguishable from zero. It is likely this was included because it allows the researchers to look where police concentration is largest (the first district) while holding other confounders constant (such as weather, unrelated changes in tourism, etc.) that should effect the districts similarly. 
 
 
-## Problem 2
+## Problem 2 - Dengue
 
 Our model will consider a prediction of log cases of dengue using CART, random forest, and boosted trees. Our model will consider `city`, `season`, `precipitation_amt`, `avg_temp_k`, `air_temp_k`, `dew_point_temp_k`, `max_air_temp_k`,`min_air_temp_k`, `precip_amt_kg_per_m2`, `relative_humidity_percent`, `specific_humidity`, and `tdtr_k` as features. 
 
@@ -173,7 +173,7 @@ for(i in 1:nrow(hyper_grid)) {
 }
 ```
 
-``` {r results=FALSE,warning=FALSE,message=FALSE}
+``` {r eacho=FALSE}
 hyper_grid %>%
   dplyr::arrange(min_RMSE) %>%
   head(10)
@@ -219,7 +219,7 @@ plot(dengue.boost, 'tdtr_k')
 
 ```
 
-##Green Certification
+## Problem 3 - Green Housing
 
 ```{r, include=FALSE}
 
@@ -297,7 +297,7 @@ From the plot we can see that there is a small marginal improvement in the expec
 
 
 
-## California Housing
+## Problem 4 - California Housing
 
 The goal of this problem is to build the best possible model for predicting the median house value. We start by building the best possible linear, KNN, CART, Random Forest, and Boosted models. After the initial train-test split, we use just the training data to again split for each models building and optimization process.
 
