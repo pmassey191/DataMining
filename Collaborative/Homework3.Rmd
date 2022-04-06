@@ -24,6 +24,7 @@ library(gbm)
 library(pdp)
 library(here)
 library(ggmap)
+library(knitr)
 ```
 
 # Homework 3
@@ -203,24 +204,15 @@ Let's look at partial dependence plots from the boosted tree. We include `specif
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
 # Partial plots
 
-#partialPlot(dengue.forest, dengue_test, 'specific_humidity', las=1)
-#partialPlot(dengue.boost, dengue_test, 'precipitation_amt', las=1)
-#partialPlot(dengue.boost, dengue_test, 'tdtr_k', las=1)
+partialPlot(dengue.forest, dengue_test, 'specific_humidity', las=1)
+partialPlot(dengue.boost, dengue_test, 'precipitation_amt', las=1)
+partialPlot(dengue.boost, dengue_test, 'tdtr_k', las=1)
 ```
 
 ##Green Certification
 
 ```{r, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-library(rpart)
-library(rpart.plot)
-library(rsample) 
-library(randomForest)
-library(modelr)
-library(caret)
-library(gbm)
-library(knitr)
+
 greenbuildings <- read.csv("../data/greenbuildings.csv")%>%
    mutate(revenue = Rent*(leasing_rate/100),
            utility_cost = net*Gas_Costs + net*Electricity_Costs) %>%
@@ -288,9 +280,10 @@ We can see that from a prediction point of view the green rating of a building d
 
 ```{r, echo=FALSE,warning=FALSE }
 partialPlot(gb_forest, greenbuildings_test, 'green_rating', las=1)
+x = partialPlot(gb_forest, greenbuildings_test, 'green_rating', las=1) %>% as.data.frame()
 ```
 
-From the plot we can see that there is a small marginal improvement in the expected revenue for a green building versus a non-green building. 
+From the plot we can see that there is a small marginal improvement in the expected revenue for a green building versus a non-green building. In fact going from a non-green building to a green building will give a revenue increase of `r x[2,2] - x[1,2]` which in percentage terms leads to a `r round(100*((x[2,2] - x[1,2])/x[1,2]),3)`% increase in revenue. This is not a large increase in revenue for transitioning to a green certified building but it is large enough that it should be considered when making the decision. 
 
 
 
