@@ -23,6 +23,7 @@ library(randomForest)
 library(gbm)
 library(pdp)
 library(here)
+library(ggmap)
 ```
 
 # Homework 3
@@ -207,3 +208,164 @@ partialPlot(dengue.boost, dengue_test, 'precipitation_amt', las=1)
 partialPlot(dengue.boost, dengue_test, 'tdtr_k', las=1)
 ```
 
+
+
+
+
+## California Housing
+
+The goal of this problem is to build the best possible model for predicting the median house value. We start by building the best possible linear, KNN, CART, Random Forest, and Boosted models. After the initial train-test split, we use just the training data to again split for each models building and optimization process.
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+# Loading Data
+CAhousing <- read_csv(here("data/CAhousing.csv"))
+
+# Adding averages for rooms and bedrooms
+CAhousing = CAhousing%>%
+  mutate(avg_room = totalRooms/households,
+         avg_bed = totalBedrooms/households)
+
+# Initial train-test split
+CAhousing_split = initial_split(CAhousing,0.8)
+ca_train = training(CAhousing_split)
+ca_test = testing(CAhousing_split)
+```
+
+The first step for each model is to make a new train-test split from our global train-test split. Then use these new sets to build and test iterations of different models.
+
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+##### Linear Model
+
+ca_linear_folds = crossv_kfold(ca_train, k=5)
+
+linear_models = map(ca_linear_folds$train, ~ lm(medianHouseValue ~. - totalBedrooms - totalRooms + medianIncome*housingMedianAge + longitude*latitude, data = ., ))
+linear_errs = map2_dbl(linear_models, ca_linear_folds$test, modelr::rmse)
+linear_errs = mean(linear_errs)
+
+##### KNN Model
+ca_knn_split = initial_split(ca_train,.8)
+ca_knn_train = training(ca_knn_split)
+ca_knn_test = testing(ca_knn_split)
+
+X = ca_knn_train[,-(10:11)]
+X = scale(X, center=TRUE, scale=TRUE)
+mu = attr(X,"scaled:center")
+sigma = attr(X,"scaled:scale")
+test = ca_knn_test[,-(10:11)]
+Y = (test[,]-mu)/sigma
+
+ca_knn = knnreg(medianHouseValue ~ ., data = X, k=15)
+knn_errs = rmse(ca_knn, Y)
+
+#### CART Model
+
+prune_1se = function(my_tree) {
+  out = as.data.frame(my_tree$cptable)
+  thresh = min(out$xerror + out$xstd)
+  cp_opt = max(out$CP[out$xerror <= thresh])
+  prune(my_tree, cp=cp_opt)
+}
+
+ca_cart_folds = crossv_kfold(ca_train, k=5)
+
+cart_models = map(ca_cart_folds$train, ~prune_1se(rpart(medianHouseValue ~ .- totalRooms - totalBedrooms,
+                                             data =., 
+                                             control = rpart.control(cp = .0001, minsplit = 10))))
+cart_errs = map2_dbl(cart_models, ca_cart_folds$test, modelr::rmse)
+cart_errs = mean(cart_errs)
+
+
+#### Random Forest
+
+ca_forest_split = initial_split(ca_train, 0.8)
+ca_forest_train = training(ca_forest_split)
+ca_forest_test = testing(ca_forest_split)
+
+ca_forest = randomForest(medianHouseValue ~ . - totalBedrooms - totalRooms,
+                         data = ca_forest_train,
+                         importance = TRUE)
+forest_errs = rmse(ca_forest, ca_forest_test)
+
+#### Boosting
+ca_boost_folds = crossv_kfold(ca_train, k=5)
+
+boost_models = map(ca_boost_folds$train, ~ gbm(medianHouseValue ~ . - totalRooms - totalBedrooms,
+                                               data =.,
+                                               interaction.depth = 6, n.trees = 600, shrinkage = 0.05))
+boost_errs = map2_dbl(boost_models, ca_boost_folds$test, modelr::rmse)
+boost_errs = mean(boost_errs)
+```
+
+We can see that the best model from each category has an out-of-sample error based on their own train-test splits. For example, we have an average RMSE from the linear model of `linear_errs` or an average RMSE of `boost_errs` from the boosted model. However, these RMSE's are from train-test splits built from the original train-test split. In order to compare RMSE's across model categories, we return to our first train-test split to recover RMSE's and determine the best predictive model.
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+#### Comparing to full train-test split
+
+# Linear
+final_linear = lm(medianHouseValue ~. - totalBedrooms - totalRooms + medianIncome*housingMedianAge + longitude*latitude,
+                  data = ca_train)
+linear_rmse = rmse(final_linear, data = ca_test)
+
+# KNN
+
+X = ca_train[,-(10:11)]
+X = scale(X, center=TRUE, scale=TRUE)
+mu = attr(X,"scaled:center")
+sigma = attr(X,"scaled:scale")
+Y = ca_test[,-(10:11)]
+Y = (Y[,]-mu)/sigma
+
+final_knn = knnreg(medianHouseValue ~ ., data = X, k=15)
+knn_rmse = rmse(final_knn, Y)
+
+# CART
+
+final_cart = rpart(medianHouseValue ~ .- totalRooms - totalBedrooms, data =ca_train, 
+                   control = rpart.control(cp = .0001, minsplit = 10))
+final_cart = prune_1se(final_cart)
+
+cart_rmse = rmse(final_cart, data=ca_test)
+
+# Random Forest
+
+final_forest = randomForest(medianHouseValue ~ . - totalBedrooms - totalRooms,
+                         data = ca_train,
+                         importance = TRUE)
+forest_rmse = rmse(final_forest, ca_test)
+
+
+# Boosting
+
+final_boost = gbm(medianHouseValue ~ . - totalRooms - totalBedrooms,
+                  data =ca_train,
+                  interaction.depth = 6, n.trees = 600, shrinkage = 0.05)
+boost_rmse = rmse(final_boost, ca_test)
+```
+
+Comparing out-of-sample errors across models, we see that the boosting model and the random forest perform quite similarly, with RMSE's of `boost_rmse` and `forest_rmse` respectively. This is compared to something like the linear model which yields `linear_rmse` and we see that both the boosting and random forets are considerable improvements. The CART and KNN models fall somewhere in between and we include their RMSE values for completness, CART has an RMSE of `cart_rmse` and KNN yields `knn_rmse`. Finally, we will move forward with the boosting as the best predictive model and create our plots.
+
+
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+#### Plots for winner
+
+ca_winner = final_boost
+
+test = CAhousing%>%
+  mutate(predictedHouseValue = predict(ca_winner, CAhousing))%>%
+  mutate(Residuals = medianHouseValue - predictedHouseValue)
+
+qmplot(longitude, latitude, color = medianHouseValue,
+       data = CAhousing)+
+  scale_color_continuous(type = 'viridis')
+
+qmplot(longitude, latitude, color = predictedHouseValue,
+       data = test)+
+  scale_color_continuous(type = 'viridis')
+
+qmplot(longitude, latitude, color = Residuals,
+       data = test)+
+  #scale_color_gradient2(low = 'black',mid = 'red')
+  scale_color_continuous(type = 'viridis')
+```
