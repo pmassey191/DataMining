@@ -1,0 +1,58 @@
+---
+title: "Homework 4"
+author: "Patrick Massey, Harrison Snell, Brandon Williams"
+date: "5/2/2022"
+output: md_document
+---
+
+```{r, echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+options(scipen=999)
+library(tidyverse)
+library(mosaic)
+library(rsample)
+library(caret)
+library(modelr)
+library(parallel)
+library(foreach)
+library(gamlr)
+library(here)
+library(stringr)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+library(gbm)
+library(pdp)
+library(here)
+library(ggmap)
+library(knitr)
+```
+
+# Homework 4
+
+Patrick Massey, Harrison Snell, Brandon Williams
+
+## Problem 1 - Wine Clustering and PCA
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+wine <- read.csv(here("Data/wine.csv"))
+
+```
+
+## Problem 2 - NutrientH2O
+
+
+## Problem 3 - Market Basket
+
+```{r include=FALSE}
+
+
+```
+
+
+
+```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
+
+
+
+```
+
+
