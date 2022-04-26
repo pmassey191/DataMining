@@ -70,10 +70,10 @@ ggcorrplot::ggcorrplot(cor(df), hc.order = TRUE)
 ```
 
 Some patterns emerge. Disregarding the spam/adult categories (unless NutrientH2O is considering a significant rebrand), there are clear groupings around:
-* beauty, cooking, and fashion 
-* health, nutrition, and fitness
-* family, school, religion, and parenting
-* gaming, sports, and university
+  * beauty, cooking, and fashion 
+  * health, nutrition, and fitness
+  * family, school, religion, and parenting
+  * gaming, sports, and university
 
 Since clustering is naturally mutually exclusive and Twitter users can have multiple interests simultaneously, we choose to present a PCA on the follower base to see if these categorical patterns continue to emerge based on the components of the Tweets. An initial PCA reveals how much variance is explained by each principle component. We see the variance dropping off after 5 components, and certainly after 10 we are gaining smaller and smaller amounts of variance. 
 
@@ -96,7 +96,7 @@ qplot(c(1:36), var_explained) +
 Running a PCA with 10 principle components gives us some pretty clear group characteristics. Let's look at the loadings for some of the components. The first principle component is once again the adult/spam group, so let's look at the high loadings for PC2. We can call this the "influencer" group: high in cooking, fashion, shopping, and beauty. Considering the overall popularity of these types of tweets among NutrientH2O followers, this would be an effective demographic to market to.
 
 
-``` {r echo=F, results = F, warning = F}
+``` {r echo=F, results = T, warning = F}
 
 pca = prcomp(df, scale=TRUE, rank=10)
 
@@ -121,7 +121,7 @@ loadings %>%
 
 PC3 represents the wellness demographic--people interested in health, nutrition, personal fitness, and cooking. Given NutrientH2O's brand name, this is a natural group to target in any social media marketing. 
 
-``` {r echo=F, results = F, warning = F}
+``` {r echo=F, results = T, warning = F}
 
 # The wellness nut
 loadings %>%
@@ -133,7 +133,7 @@ loadings %>%
 
 Finally, PC4 shows a younger demographic, those interested in video games, sports, and college/university. The insight here for the brand is to target this market segment with branding aimed at youth and college-aged consumers. 
 
-``` {r echo=F, results = F, warning = F}
+``` {r echo=F, results = T, warning = F}
 
 # The college demographic - school, sports and video games
 loadings %>%
@@ -145,7 +145,7 @@ loadings %>%
 
 The other principle components begin to show less clear market segments, but some interesting ones still emerge. Consider PC7, which has high loadings in art, film, and crafts, or PC10, which seems to have a high interest in dating. 
 
-``` {r echo=F, results = F, warning = F}
+``` {r echo=F, results = T, warning = F}
 head(round(pca$rotation[,1:10],2)) 
 ```
 
