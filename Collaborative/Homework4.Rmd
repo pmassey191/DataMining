@@ -146,7 +146,7 @@ loadings %>%
 The other principle components begin to show less clear market segments, but some interesting ones still emerge. Consider PC7, which has high loadings in art, film, and crafts, or PC10, which seems to have a high interest in dating. 
 
 ``` {r echo=F, results = T, warning = F}
-head(round(pca$rotation[,1:10],2)) 
+round(pca$rotation[,1:10],2)
 ```
 
 Principle component analysis reveals some clear "ingredients" for each demographic, highlighting their interests, and giving valuable insight to the NutrientH2O marketing team to orient their strategy. 
