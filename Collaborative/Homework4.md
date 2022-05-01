@@ -166,5 +166,6 @@ with 171 rules, now lets visualize these rules with a graph.
     ## recommended to use relative paths for images. You had absolute paths: "C:/Users/
     ## Patrick/OneDrive/Documents/GitHub/DataMining/data/graph.png"
 
-<img src="C:/Users/Patrick/OneDrive/Documents/GitHub/DataMining/data/graph.png" width="1024" />
+
+![](Homework4_files/figure-markdown_strict/graph.png)
 In this figure we
