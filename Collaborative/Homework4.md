@@ -159,13 +159,12 @@ In order to construct a graph we will subset the rules looking for a
 confidence greater than 25% and support greater than 1%. This leaves us
 with 171 rules, now lets visualize these rules with a graph.
 
-    sub1 = subset(grocrules, subset=confidence > 0.25 & support > 0.01)
-    knitr::include_graphics(here("data/graph.png"))
-
-    ## Warning in knitr::include_graphics(here("data/graph.png")): It is highly
-    ## recommended to use relative paths for images. You had absolute paths: "C:/Users/
-    ## Patrick/OneDrive/Documents/GitHub/DataMining/data/graph.png"
-
-
 ![](Homework4_files/figure-markdown_strict/graph.png)
-In this figure we
+
+This graph produces some results that are both interesting and seem
+reasonable. The colors on the graph represent the modularity class, the
+size of the nodes represents the support, and the size of the text
+represents the degree. We see two main groups of consumers, those who
+purchase whole milk and those who purchase “other vegetable”. We see a
+slightly smaller group of consumers purchasing yogurt and root
+vegetables as well.
