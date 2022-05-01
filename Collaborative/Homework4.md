@@ -160,12 +160,11 @@ confidence greater than 25% and support greater than 1%. This leaves us
 with 171 rules, now lets visualize these rules with a graph.
 
     sub1 = subset(grocrules, subset=confidence > 0.25 & support > 0.01)
-    knitr::include_graphics(here("Collaborative/Homework4_files/figure-markdown_strict/graph.png"))
+    knitr::include_graphics(here("data/graph.png"))
 
-    ## Warning in knitr::include_graphics(here("Collaborative/Homework4_files/figure-
-    ## markdown_strict/graph.png")): It is highly recommended to use relative paths
-    ## for images. You had absolute paths: "C:/Users/Patrick/OneDrive/Documents/GitHub/
-    ## DataMining/Collaborative/Homework4_files/figure-markdown_strict/graph.png"
+    ## Warning in knitr::include_graphics(here("data/graph.png")): It is highly
+    ## recommended to use relative paths for images. You had absolute paths: "C:/Users/
+    ## Patrick/OneDrive/Documents/GitHub/DataMining/data/graph.png"
 
-<img src="C:/Users/Patrick/OneDrive/Documents/GitHub/DataMining/Collaborative/Homework4_files/figure-markdown_strict/graph.png" width="1024" />
+<img src="C:/Users/Patrick/OneDrive/Documents/GitHub/DataMining/data/graph.png" width="1024" />
 In this figure we

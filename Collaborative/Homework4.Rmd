@@ -195,6 +195,6 @@ plot(grocrules, method='two-key plot')
 In this figure we see that our rules with length four have a large variance in confidence but low support. As we shorten the rule length, there we see less variance in confidence and a higher level of support. Again our current number of rules is too much to make a sensible graph. In order to construct a graph we will subset the rules looking for a confidence greater than 25% and support greater than 1%. This leaves us with 171 rules, now lets visualize these rules with a graph.
 ```{r}
 sub1 = subset(grocrules, subset=confidence > 0.25 & support > 0.01)
-knitr::include_graphics(here("Collaborative/Homework4_files/figure-markdown_strict/graph.png"))
+knitr::include_graphics(here("data/graph.png"))
 ```
 In this figure we 
