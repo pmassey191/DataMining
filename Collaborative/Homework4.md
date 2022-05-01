@@ -87,16 +87,85 @@ but some interesting ones still emerge. Consider PC7, which has high
 loadings in art, film, and crafts, or PC10, which seems to have a high
 interest in dating.
 
-    ##                  PC1  PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10
-    ## chatter        -0.13 0.20 -0.07  0.11 -0.19  0.46 -0.11  0.07 -0.02  0.11
-    ## current_events -0.10 0.06 -0.05  0.03 -0.06  0.14  0.04 -0.05 -0.02 -0.11
-    ## travel         -0.12 0.04 -0.42 -0.15 -0.01 -0.16  0.09  0.31  0.02 -0.11
-    ## photo_sharing  -0.18 0.30  0.01  0.15 -0.23  0.21 -0.13  0.02  0.02 -0.13
-    ## uncategorized  -0.09 0.15  0.03  0.02  0.06 -0.04  0.19 -0.05 -0.05  0.27
-    ## tv_film        -0.10 0.08 -0.09  0.09  0.21  0.06  0.50 -0.22  0.13 -0.10
+    ##                    PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8   PC9  PC10
+    ## chatter          -0.13  0.20 -0.07  0.11 -0.19  0.46 -0.11  0.07 -0.02  0.11
+    ## current_events   -0.10  0.06 -0.05  0.03 -0.06  0.14  0.04 -0.05 -0.02 -0.11
+    ## travel           -0.12  0.04 -0.42 -0.15 -0.01 -0.16  0.09  0.31  0.02 -0.11
+    ## photo_sharing    -0.18  0.30  0.01  0.15 -0.23  0.21 -0.13  0.02  0.02 -0.13
+    ## uncategorized    -0.09  0.15  0.03  0.02  0.06 -0.04  0.19 -0.05 -0.05  0.27
+    ## tv_film          -0.10  0.08 -0.09  0.09  0.21  0.06  0.50 -0.22  0.13 -0.10
+    ## sports_fandom    -0.29 -0.32  0.05  0.06 -0.03  0.01 -0.07 -0.11  0.02 -0.03
+    ## politics         -0.13  0.01 -0.49 -0.20 -0.06 -0.13 -0.07  0.01  0.03 -0.04
+    ## food             -0.30 -0.24  0.11 -0.07  0.07  0.02  0.04  0.09  0.05 -0.10
+    ## family           -0.24 -0.20  0.05  0.07 -0.01  0.05 -0.10 -0.02  0.00 -0.10
+    ## home_and_garden  -0.12  0.05 -0.02 -0.01  0.04  0.04  0.09 -0.10 -0.08  0.27
+    ## music            -0.12  0.14  0.01  0.08  0.07 -0.01  0.15 -0.09  0.07 -0.18
+    ## news             -0.13 -0.04 -0.34 -0.18 -0.03 -0.09 -0.14 -0.46  0.01  0.08
+    ## online_gaming    -0.07  0.08 -0.06  0.22  0.48 -0.01 -0.29  0.06 -0.04 -0.01
+    ## shopping         -0.13  0.21 -0.05  0.10 -0.20  0.43 -0.09  0.03  0.05 -0.13
+    ## health_nutrition -0.12  0.15  0.23 -0.46  0.17  0.08 -0.04  0.04  0.06 -0.03
+    ## college_uni      -0.09  0.12 -0.09  0.26  0.49  0.00 -0.19  0.04 -0.01 -0.04
+    ## sports_playing   -0.13  0.11 -0.04  0.18  0.37 -0.03 -0.22  0.06  0.01  0.07
+    ## cooking          -0.19  0.31  0.19  0.01 -0.12 -0.36 -0.06 -0.05  0.00 -0.11
+    ## eco              -0.15  0.09  0.03 -0.12  0.02  0.18  0.00  0.04 -0.08 -0.11
+    ## computers        -0.14  0.04 -0.37 -0.14 -0.06 -0.14 -0.01  0.36 -0.01 -0.10
+    ## business         -0.14  0.10 -0.11  0.01 -0.05  0.07  0.09  0.14  0.11  0.07
+    ## outdoors         -0.14  0.11  0.14 -0.41  0.15  0.04 -0.06 -0.08 -0.03  0.02
+    ## crafts           -0.19 -0.02  0.00  0.02  0.04  0.08  0.24  0.03  0.03  0.04
+    ## automotive       -0.13 -0.03 -0.19 -0.04 -0.06  0.06 -0.24 -0.59 -0.06  0.08
+    ## art              -0.10  0.06 -0.05  0.06  0.16  0.03  0.49 -0.16  0.05 -0.04
+    ## religion         -0.30 -0.32  0.09  0.07 -0.02 -0.03  0.02  0.10  0.03 -0.07
+    ## beauty           -0.20  0.21  0.15  0.15 -0.19 -0.37 -0.02 -0.06 -0.02 -0.04
+    ## parenting        -0.29 -0.30  0.09  0.05 -0.04 -0.01 -0.04  0.06 -0.01 -0.04
+    ## dating           -0.11  0.07 -0.03 -0.03 -0.01  0.00  0.03  0.17 -0.05  0.76
+    ## school           -0.28 -0.20  0.08  0.09 -0.09  0.01  0.02  0.08 -0.03  0.25
+    ## personal_fitness -0.14  0.14  0.22 -0.44  0.16  0.09 -0.04  0.04  0.04 -0.03
+    ## fashion          -0.18  0.28  0.14  0.14 -0.17 -0.36 -0.03 -0.02 -0.02  0.04
+    ## small_business   -0.12  0.09 -0.10  0.08  0.03  0.05  0.21  0.01 -0.12  0.00
+    ## spam             -0.01  0.00 -0.01 -0.02  0.02  0.01  0.07  0.01 -0.66 -0.12
+    ## adult            -0.03 -0.01  0.00 -0.02  0.01  0.02  0.07  0.00 -0.69 -0.06
 
 Principle component analysis reveals some clear “ingredients” for each
 demographic, highlighting their interests, and giving valuable insight
 to the NutrientH2O marketing team to orient their strategy.
 
 ## Problem 3 - Market Basket
+
+Analyzing a grocery purchases is an extremely important task for grocery
+retailers. Understanding how products connect to certain consumers can
+allow the retailer to create product placement that a consumer will find
+useful. This creates a better experience for the consumer and helps
+increase sales and thus driving revenue up for the retailer. In this
+example we start with a data set that contains 9,835 consumer grocery
+baskets. The support level parameter essentially indicates the
+popularity of an item. When deciding the parameters we picked a support
+level of .001. The reasoning being that we wanted items to have appeared
+in approximately 10 consumers grocery carts. The confidence level is
+essentially the conditional probability of item x being purchased given
+the consumer has purchased item y. We set this level for at .05 to
+indicate that we wanted at least a 5% probability of a consumer
+purchasing one item conditional on them already purchasing another. When
+using these levels to create association rules we are left with 36,014
+association rules. This is too many rules to make a sensible graph out
+of but lets look at some key plots first.
+
+![](Homework4_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+
+In this figure we see that our rules with length four have a large
+variance in confidence but low support. As we shorten the rule length,
+there we see less variance in confidence and a higher level of support.
+Again our current number of rules is too much to make a sensible graph.
+In order to construct a graph we will subset the rules looking for a
+confidence greater than 25% and support greater than 1%. This leaves us
+with 171 rules, now lets visualize these rules with a graph.
+
+    sub1 = subset(grocrules, subset=confidence > 0.25 & support > 0.01)
+    knitr::include_graphics(here("Collaborative/Homework4_files/figure-markdown_strict/graph.png"))
+
+    ## Warning in knitr::include_graphics(here("Collaborative/Homework4_files/figure-
+    ## markdown_strict/graph.png")): It is highly recommended to use relative paths
+    ## for images. You had absolute paths: "C:/Users/Patrick/OneDrive/Documents/GitHub/
+    ## DataMining/Collaborative/Homework4_files/figure-markdown_strict/graph.png"
+
+<img src="C:/Users/Patrick/OneDrive/Documents/GitHub/DataMining/Collaborative/Homework4_files/figure-markdown_strict/graph.png" width="1024" />
+In this figure we

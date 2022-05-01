@@ -25,6 +25,10 @@ library(pdp)
 library(here)
 library(ggmap)
 library(knitr)
+library(LICORS)  
+library(arules)  
+library(arulesViz)
+library(igraph)
 ```
 
 # Homework 4
@@ -155,16 +159,42 @@ Principle component analysis reveals some clear "ingredients" for each demograph
 ## Problem 3 - Market Basket
 
 ```{r include=FALSE}
+groceries_raw <- read.csv(here("Data/groceries.csv"),header = FALSE)
 
+groceries <- groceries_raw %>% separate(V1, 
+                        into =c("1","2","3","4","5","6","7","8",
+                                "9","10","11","12","13","14","15","16",
+                                "17","18","19","20","21","22","23","24","25",
+                                "26","27","28","29","30","31","32"),
+                                sep = ",")
+
+groceries <- groceries %>% rownames_to_column(var = "customer") %>% 
+  mutate(customer = as.factor(customer))
+
+groceries <- pivot_longer(groceries,cols = !customer, 
+                               names_to = "category",values_to = "grocery") %>% 
+  filter(grocery != "")
+
+
+groceries = split(x=groceries$grocery, f=as.factor(groceries$customer))
+
+groceries= lapply(groceries, unique)
+
+groc_carts = as(groceries, "transactions")
+grocrules = apriori(groc_carts, 
+                     parameter=list(support=.001, confidence=.05, maxlen=4))
 
 ```
-
+Analyzing a grocery purchases is an extremely important task for grocery retailers. Understanding how products connect to certain consumers can allow the retailer to create product placement that a consumer will find useful. This creates a better experience for the consumer and helps increase sales and thus driving revenue up for the retailer. In this example we start with a data set that contains 9,835 consumer grocery baskets. The support level parameter essentially indicates the popularity of an item. When deciding the parameters we picked a support level of .001. The reasoning being that we wanted items to have appeared in approximately 10 consumers grocery carts. The confidence level is essentially the conditional probability of item x being purchased given the consumer has purchased item y. We set this level for at .05 to indicate that we wanted at least a 5% probability of a consumer purchasing one item conditional on them already purchasing another. When using these levels to create association rules we are left with 36,014 association rules. This is too many rules to make a sensible graph out of but lets look at some key plots first. 
 
 
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
-
-
-
+plot(grocrules, method='two-key plot')
 ```
 
-
+In this figure we see that our rules with length four have a large variance in confidence but low support. As we shorten the rule length, there we see less variance in confidence and a higher level of support. Again our current number of rules is too much to make a sensible graph. In order to construct a graph we will subset the rules looking for a confidence greater than 25% and support greater than 1%. This leaves us with 171 rules, now lets visualize these rules with a graph.
+```{r}
+sub1 = subset(grocrules, subset=confidence > 0.25 & support > 0.01)
+knitr::include_graphics(here("Collaborative/Homework4_files/figure-markdown_strict/graph.png"))
+```
+In this figure we 
