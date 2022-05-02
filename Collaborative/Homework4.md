@@ -1,10 +1,68 @@
-# Homework 4
+Homework 4
+==========
 
 Patrick Massey, Harrison Snell, Brandon Williams
 
-## Problem 1 - Wine Clustering and PCA
+Problem 1 - Wine Clustering and PCA
+-----------------------------------
 
-## Problem 2 - NutrientH2O
+In this problem, we want to use a clustering approach and a PCA approach
+to use the chemical properties of wine to determine the color of the
+wine. We will start by running K-means++ as our clustering algorithm
+with 2 clusters. We ran clustering with more than 2 clusters to see if
+any larger trends emerged. Specifically, in the realm of quality,
+however clustering was not able to capture any useful divisions of
+quality given the chemical properties of the wine. The same goes for PCA
+with none of the principal components picking up on the quality of the
+wine. This is not a surprise as it is well known that even wine experts
+tend to not be able to accurately judge the quality of a wine. For PCA,
+we choose to run the analysis with rank 6 to capture a large amount of
+the variability. In both cases, the chemical properties of the wine were
+scaled and centered.
+
+Clustering gets about 97.4% of wines correctly identified by their
+color. When we compare a few charts of the chemical properties colored
+by either the true color of the wine or the clustering results, we see
+that the graphs are very similar.
+
+![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-1.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-2.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-3.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-4.png)
+As we can see from the visualization, the clustering algorithm picks up
+well on the color of the wines. We can now look at the PCA approach.
+
+![](Homework4_files/figure-markdown_strict/unnamed-chunk-4-1.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-4-2.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-4-3.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-4-4.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-4-5.png)
+
+After running PCA with rank 6, we see that we capture about 85% of the
+variation. PC1, with the highest proportion of that variance, is the
+component that best captures the color classification of the wines. In
+the first pair of graphs comparing color to a couple principle
+components, we see that the color of the wine is almost
+indistinguishable in the case of PC2. For a given value of PC2, it is
+unlikely that we would be able to tell the color. For PC1, that is a
+good bit of difference between the reds and the whites. This means that
+given a value for PC1, we are able to make a good guess as to the color
+of the wine. The next sets of graphs show that using PC1 and at least
+one other component can result in a good predictions of wine color. If
+we were to run a simple supervised learning algorithm with all our
+principle components, it would likely do a very good job identifying the
+color of wines given their PCA weightings. Again, we see that PC1
+appears to be doing most of the heavy lifting. When we look at the graph
+with PC2 and PC4, we see the general result of two non-PC1 components
+that is a blob of points that all look the same. The fact that a single
+principle component seems to be providing most of the color
+identification lends itself to the idea that clustering is a better
+approach for this problem. The clustering approach is more intuitive for
+separating wines by their color given chemical features. Of course,
+running supervised learning on the principle components could also end
+with very accurate results, we start to run into the problem of actually
+reducing dimensions. Running a supervised learning algorithm with 6
+components does not reduce the dimension much with our 11 chemical
+properties. Given that the clustering algorithm is about 94% accurate
+and remains the more simple and intuitive approach to separating wines
+into the 2 groups of color, we believe that clustering is the best
+unsupervised approach to this question.
+
+Problem 2 - NutrientH2O
+-----------------------
 
 When considering marketing to the NutrientH2O Twitter followers, there
 are several natural groups that emerge using unsupervised learning
@@ -13,7 +71,7 @@ campaign to specific follower demographics. Before conducting principle
 component analysis (PCA), let’s take a look at the overall trends of the
 tweets of the Twitter followers.
 
-![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+![](Homework4_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 As we might have predicted, the average user generally tweets about
 general, uncategorized “chatter” and some photo sharing. Nevertheless,
@@ -38,7 +96,7 @@ much variance is explained by each principle component. We see the
 variance dropping off after 5 components, and certainly after 10 we are
 gaining smaller and smaller amounts of variance.
 
-![](Homework4_files/figure-markdown_strict/unnamed-chunk-4-1.png)
+![](Homework4_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 Running a PCA with 10 principle components gives us some pretty clear
 group characteristics. Let’s look at the loadings for some of the
@@ -129,7 +187,8 @@ Principle component analysis reveals some clear “ingredients” for each
 demographic, highlighting their interests, and giving valuable insight
 to the NutrientH2O marketing team to orient their strategy.
 
-## Problem 3 - Market Basket
+Problem 3 - Market Basket
+-------------------------
 
 Analyzing a grocery purchases is an extremely important task for grocery
 retailers. Understanding how products connect to certain consumers can
@@ -149,7 +208,7 @@ using these levels to create association rules we are left with 36,014
 association rules. This is too many rules to make a sensible graph out
 of but lets look at some key plots first.
 
-![](Homework4_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](Homework4_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
 In this figure we see that our rules with length four have a large
 variance in confidence but low support. As we shorten the rule length,
