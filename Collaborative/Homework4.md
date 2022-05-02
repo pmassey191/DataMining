@@ -1,10 +1,8 @@
-Homework 4
-==========
+# Homework 4
 
 Patrick Massey, Harrison Snell, Brandon Williams
 
-Problem 1 - Wine Clustering and PCA
------------------------------------
+## Problem 1 - Wine Clustering and PCA
 
 In this problem, we want to use a clustering approach and a PCA approach
 to use the chemical properties of wine to determine the color of the
@@ -26,6 +24,7 @@ by either the true color of the wine or the clustering results, we see
 that the graphs are very similar.
 
 ![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-1.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-2.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-3.png)![](Homework4_files/figure-markdown_strict/unnamed-chunk-3-4.png)
+
 As we can see from the visualization, the clustering algorithm picks up
 well on the color of the wines. We can now look at the PCA approach.
 
@@ -53,20 +52,19 @@ identification lends itself to the idea that clustering is a better
 approach for this problem. The clustering approach is more intuitive for
 separating wines by their color given chemical features. Of course,
 running supervised learning on the principle components could also end
-with very accurate results, we start to run into the problem of actually
-reducing dimensions. Running a supervised learning algorithm with 6
-components does not reduce the dimension much with our 11 chemical
-properties. Given that the clustering algorithm is about 94% accurate
-and remains the more simple and intuitive approach to separating wines
-into the 2 groups of color, we believe that clustering is the best
-unsupervised approach to this question.
+with very accurate results, but we start to run into the problem of
+actually reducing dimensions. Running a supervised learning algorithm
+with 6 components does not reduce the dimension much with our 11
+chemical properties. Given that the clustering algorithm is about 94%
+accurate and remains the more simple and intuitive approach to
+separating wines into the 2 groups of color, we believe that clustering
+is the best unsupervised approach to this question.
 
-Problem 2 - NutrientH2O
------------------------
+## Problem 2 - NutrientH2O
 
 When considering marketing to the NutrientH2O Twitter followers, there
 are several natural groups that emerge using unsupervised learning
-techniques. These groups will help NutrientH20 coordinate a marketing
+techniques. These groups will help NutrientH2O coordinate a marketing
 campaign to specific follower demographics. Before conducting principle
 component analysis (PCA), let’s take a look at the overall trends of the
 tweets of the Twitter followers.
@@ -84,9 +82,12 @@ hierarchical clustering:
 
 Some patterns emerge. Disregarding the spam/adult categories (unless
 NutrientH2O is considering a significant rebrand), there are clear
-groupings around: \* beauty, cooking, and fashion \* health, nutrition,
-and fitness \* family, school, religion, and parenting \* gaming,
-sports, and university
+groupings around:
+
+-   beauty, cooking, and fashion
+-   health, nutrition, and fitness
+-   family, school, religion, and parenting
+-   gaming, sports, and university
 
 Since clustering is naturally mutually exclusive and Twitter users can
 have multiple interests simultaneously, we choose to present a PCA on
@@ -187,8 +188,7 @@ Principle component analysis reveals some clear “ingredients” for each
 demographic, highlighting their interests, and giving valuable insight
 to the NutrientH2O marketing team to orient their strategy.
 
-Problem 3 - Market Basket
--------------------------
+## Problem 3 - Market Basket
 
 Analyzing a grocery purchases is an extremely important task for grocery
 retailers. Understanding how products connect to certain consumers can
@@ -206,7 +206,7 @@ indicate that we wanted at least a 5% probability of a consumer
 purchasing one item conditional on them already purchasing another. When
 using these levels to create association rules we are left with 36,014
 association rules. This is too many rules to make a sensible graph out
-of but lets look at some key plots first.
+of, but lets look at some key plots first.
 
 ![](Homework4_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 

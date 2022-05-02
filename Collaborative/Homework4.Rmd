@@ -86,6 +86,7 @@ ggplot(wine)+
 
 
 ```
+
 As we can see from the visualization, the clustering algorithm picks up well on the color of the wines. We can now look at the PCA approach.
 
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
@@ -134,13 +135,13 @@ ggplot(wine_full)+
 
 ```
 
-After running PCA with rank 6, we see that we capture about 85% of the variation. PC1, with the highest proportion of that variance, is the component that best captures the color classification of the wines. In the first pair of graphs comparing color to a couple principle components, we see that the color of the wine is almost indistinguishable in the case of PC2. For a given value of PC2, it is unlikely that we would be able to tell the color. For PC1, that is a good bit of difference between the reds and the whites. This means that given a value for PC1, we are able to make a good guess as to the color of the wine. The next sets of graphs show that using PC1 and at least one other component can result in a good predictions of wine color. If we were to run a simple supervised learning algorithm with all our principle components, it would likely do a very good job identifying the color of wines given their PCA weightings. Again, we see that PC1 appears to be doing most of the heavy lifting. When we look at the graph with PC2 and PC4, we see the general result of two non-PC1 components that is a blob of points that all look the same. The fact that a single principle component seems to be providing most of the color identification lends itself to the idea that clustering is a better approach for this problem. The clustering approach is more intuitive for separating wines by their color given chemical features. Of course, running supervised learning on the principle components could also end with very accurate results, we start to run into the problem of actually reducing dimensions. Running a supervised learning algorithm with 6 components does not reduce the dimension much with our 11 chemical properties. Given that the clustering algorithm is about 94% accurate and remains the more simple and intuitive approach to separating wines into the 2 groups of color, we believe that clustering is the best unsupervised approach to this question. 
+After running PCA with rank 6, we see that we capture about 85% of the variation. PC1, with the highest proportion of that variance, is the component that best captures the color classification of the wines. In the first pair of graphs comparing color to a couple principle components, we see that the color of the wine is almost indistinguishable in the case of PC2. For a given value of PC2, it is unlikely that we would be able to tell the color. For PC1, that is a good bit of difference between the reds and the whites. This means that given a value for PC1, we are able to make a good guess as to the color of the wine. The next sets of graphs show that using PC1 and at least one other component can result in a good predictions of wine color. If we were to run a simple supervised learning algorithm with all our principle components, it would likely do a very good job identifying the color of wines given their PCA weightings. Again, we see that PC1 appears to be doing most of the heavy lifting. When we look at the graph with PC2 and PC4, we see the general result of two non-PC1 components that is a blob of points that all look the same. The fact that a single principle component seems to be providing most of the color identification lends itself to the idea that clustering is a better approach for this problem. The clustering approach is more intuitive for separating wines by their color given chemical features. Of course, running supervised learning on the principle components could also end with very accurate results, but we start to run into the problem of actually reducing dimensions. Running a supervised learning algorithm with 6 components does not reduce the dimension much with our 11 chemical properties. Given that the clustering algorithm is about 94% accurate and remains the more simple and intuitive approach to separating wines into the 2 groups of color, we believe that clustering is the best unsupervised approach to this question. 
 
 
 
 ## Problem 2 - NutrientH2O
 
-When considering marketing to the NutrientH2O Twitter followers, there are several natural groups that emerge using unsupervised learning techniques. These groups will help NutrientH20 coordinate a marketing campaign to specific follower demographics. Before conducting principle component analysis (PCA), let's take a look at the overall trends of the tweets of the Twitter followers. 
+When considering marketing to the NutrientH2O Twitter followers, there are several natural groups that emerge using unsupervised learning techniques. These groups will help NutrientH2O coordinate a marketing campaign to specific follower demographics. Before conducting principle component analysis (PCA), let's take a look at the overall trends of the tweets of the Twitter followers. 
 
 ```{r echo=FALSE}
 df <- read.csv(here("data/social_marketing.csv"))
@@ -164,13 +165,14 @@ ggplot(avg_user) +
 
 As we might have predicted, the average user generally tweets about general, uncategorized "chatter" and some photo sharing. Nevertheless, we see some high counts in health and nutrition, cooking, politics, sports, and travel. Are there natural groupings of followers into categories? Consider the correlation matrix of tweet type organized by hierarchical clustering: 
 
-```{r pressure, echo=FALSE}
+```{r pressure, echo=FALSE, fig.height = 10, fig.width = 10}
 
 # a heatmap visualization with sorting by hierarchical clustering
 ggcorrplot::ggcorrplot(cor(df), hc.order = TRUE)
 ```
 
 Some patterns emerge. Disregarding the spam/adult categories (unless NutrientH2O is considering a significant rebrand), there are clear groupings around:
+
   * beauty, cooking, and fashion 
   * health, nutrition, and fitness
   * family, school, religion, and parenting
@@ -282,7 +284,7 @@ grocrules = apriori(groc_carts,
                      parameter=list(support=.001, confidence=.05, maxlen=4))
 
 ```
-Analyzing a grocery purchases is an extremely important task for grocery retailers. Understanding how products connect to certain consumers can allow the retailer to create product placement that a consumer will find useful. This creates a better experience for the consumer and helps increase sales and thus driving revenue up for the retailer. In this example we start with a data set that contains 9,835 consumer grocery baskets. The support level parameter essentially indicates the popularity of an item. When deciding the parameters we picked a support level of .001. The reasoning being that we wanted items to have appeared in approximately 10 consumers grocery carts. The confidence level is essentially the conditional probability of item x being purchased given the consumer has purchased item y. We set this level for at .05 to indicate that we wanted at least a 5% probability of a consumer purchasing one item conditional on them already purchasing another. When using these levels to create association rules we are left with 36,014 association rules. This is too many rules to make a sensible graph out of but lets look at some key plots first. 
+Analyzing a grocery purchases is an extremely important task for grocery retailers. Understanding how products connect to certain consumers can allow the retailer to create product placement that a consumer will find useful. This creates a better experience for the consumer and helps increase sales and thus driving revenue up for the retailer. In this example we start with a data set that contains 9,835 consumer grocery baskets. The support level parameter essentially indicates the popularity of an item. When deciding the parameters we picked a support level of .001. The reasoning being that we wanted items to have appeared in approximately 10 consumers grocery carts. The confidence level is essentially the conditional probability of item x being purchased given the consumer has purchased item y. We set this level for at .05 to indicate that we wanted at least a 5% probability of a consumer purchasing one item conditional on them already purchasing another. When using these levels to create association rules we are left with 36,014 association rules. This is too many rules to make a sensible graph out of, but lets look at some key plots first. 
 
 
 ```{r echo=FALSE,results=FALSE,warning=FALSE,message=FALSE}
